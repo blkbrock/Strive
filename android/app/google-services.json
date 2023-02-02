@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "574814677548",
+    "project_id": "strive-bd04f",
+    "storage_bucket": "strive-bd04f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:574814677548:android:386b00dfb781173793bf89",
+        "android_client_info": {
+          "package_name": "krusemark.brock.strive"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "574814677548-2dr2dj55gf4l2ms1g86c7l2tdt1bsels.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB6h9TXyBrp0ktzSWoeMI1uy6pzBYZ-Wt0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "574814677548-2dr2dj55gf4l2ms1g86c7l2tdt1bsels.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
