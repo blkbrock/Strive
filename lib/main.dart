@@ -52,6 +52,23 @@ class _StriveHomePageState extends State<StriveHomePage> {
   final String getText = "Get User";
   final String removeText = "Remove User";
 
+  void createUser() {
+    databaseRef.doc("2").set({"Name": "Resu", "Title": "User 2"});
+  }
+
+  Future<void> getUser() async {
+    DocumentSnapshot data = await retrieveData();
+    print(data.data().toString());
+  }
+
+  Future<DocumentSnapshot> retrieveData() async {
+    return databaseRef.doc("1").get();
+  }
+
+  void removeUser() {
+    databaseRef.doc("2").delete();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,6 +108,9 @@ class _StriveHomePageState extends State<StriveHomePage> {
               'boo',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
+            TextButton(onPressed: createUser, child: Text(createText)),
+            TextButton(onPressed: getUser, child: Text(getText)),
+            TextButton(onPressed: removeUser, child: Text(removeText)),
           ],
         ),
       ),
