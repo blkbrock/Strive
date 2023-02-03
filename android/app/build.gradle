@@ -21,12 +21,11 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
-plugins {
-    id 'com.android.application'
-    id 'kotlin-android'
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
     apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
-    id 'com.google.gms.google-services'
-}
+apply plugin: 'com.google.gms.google-services'
+
 
 android {
     compileSdkVersion flutter.compileSdkVersion
@@ -65,5 +64,5 @@ flutter {
 dependencies {
     implementation platform('com.google.firebase:firebase-bom:31.2.0')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.android.support.multidex:1.0.3'
+    implementation 'com.android.support:multidex:1.0.3'
 }
