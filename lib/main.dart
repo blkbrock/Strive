@@ -1,6 +1,9 @@
+import '';
+import 'package:flutter/material.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
+
 import 'package:strive/profile_page.dart';
 
 void main() {
@@ -15,25 +18,25 @@ class MyApp extends StatelessWidget {
     return FutureBuilder(
         future: Firebase.initializeApp(),
         builder: (context, snapshot) {
-      //checking for errors
-      if (snapshot.hasError) {
-        print("Couldn't connect!");
-      }
-      //Once complete, show app:
-      if (snapshot.connectionState == ConnectionState.done) {
-        return MaterialApp(
-          title: 'Strive!',
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            primarySwatch: Colors.deepPurple,
-            canvasColor: Colors.white12,
-          ),
-          home: const StriveHomePage(title: 'Strive Home'),
-        );
-      }
-      Widget loading = MaterialApp();
-      return loading;
-    });
+          //checking for errors
+          if (snapshot.hasError) {
+            print("Couldn't connect!");
+          }
+          //Once complete, show app:
+          if (snapshot.connectionState == ConnectionState.done) {
+            return MaterialApp(
+              title: 'Strive!',
+              debugShowCheckedModeBanner: false,
+              theme: ThemeData(
+                primarySwatch: Colors.deepPurple,
+                canvasColor: Colors.white12,
+              ),
+              home: const StriveHomePage(title: 'Strive Home'),
+            );
+          }
+          Widget loading = MaterialApp();
+          return loading;
+        });
   }
 }
 
@@ -47,28 +50,69 @@ class StriveHomePage extends StatefulWidget {
 }
 
 class _StriveHomePageState extends State<StriveHomePage> {
-  final databaseRef = FirebaseFirestore.instance.collection('User');
+  final databaseRef = FirebaseFirestore.instance.collection('Users');
   final String createText = "Create User";
-  final String getText = "Get User";
+  final String getText = "Sync Database";
   final String removeText = "Remove User";
+  String id = '', name = '', title = '', removeID = '';
+  String user1 = '', user2 = '', user3 = '', user4 = '', user5 = '';
 
-  void createUser() {
-    databaseRef.doc("2").set({"Name": "Resu", "Title": "User 2"});
+  void createCustomUser(String id, String name, String title) {
+    databaseRef.doc(id).set({"Nickname": name});
   }
 
   Future<void> getUser() async {
-    DocumentSnapshot data = await retrieveData();
-    print(data.data().toString());
+    DocumentSnapshot data1 = await retrieveData("1");
+    if (data1.data() != null) {
+      user1 = data1.data().toString();
+    }
+    if (data1.data() == null) {
+      user1 = '';
+    }
+    DocumentSnapshot data2 = await retrieveData("2");
+    if (data2.data() != null) {
+      user2 = data2.data().toString();
+    }
+    if (data2.data() == null) {
+      user2 = '';
+    }
+    DocumentSnapshot data3 = await retrieveData("3");
+    if (data3.data() != null) {
+      user3 = data3.data().toString();
+    }
+    if (data3.data() == null) {
+      user3 = '';
+    }
+    DocumentSnapshot data4 = await retrieveData("4");
+    if (data4.data() != null) {
+      user4 = data4.data().toString();
+    }
+    if (data4.data() == null) {
+      user4 = '';
+    }
+    DocumentSnapshot data5 = await retrieveData("5");
+    if (data5.data() != null) {
+      user5 = data5.data().toString();
+    }
+    if (data5.data() == null) {
+      user5 = '';
+    }
+    setState(() {});
   }
 
-  Future<DocumentSnapshot> retrieveData() async {
-    return databaseRef.doc("1").get();
+  Future<DocumentSnapshot> retrieveData(String id) async {
+    return databaseRef.doc(id).get();
   }
 
-  void removeUser() {
-    databaseRef.doc("2").delete();
+  void removeUser(String id) {
+    databaseRef.doc(id).delete();
   }
-
+  _StriveHomePageState() {
+  getUser();
+  Future.delayed(const Duration(milliseconds: 2000), () {
+  setState(() {});
+  });
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,38 +123,184 @@ class _StriveHomePageState extends State<StriveHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (BuildContext context) {
-                      return const ProfilePage();
-                    }));
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.deepPurple,
-                    foregroundColor: Colors.black38,
-                    minimumSize: const Size(200, 40),
-                  ),
-                  child: const Text(
-                    'Profile ->',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ],
+            const SizedBox(height: 10),
+            const Image(
+                image: AssetImage('assets/images/logo_transparent.png'),
+                width: 200,
+                height: 200),
+            const SizedBox(height: 20),
+            const Text('Choose Profile', style: TextStyle(color: Colors.deepPurpleAccent, fontSize: 24)),
+            TextButton(
+                onPressed: getUser,
+                child: Text(getText,
+                    style: const TextStyle(
+                        color: Colors.deepPurpleAccent, fontSize: 12))),
+            const SizedBox(height: 20),
+            TextButton(
+              onPressed: () {Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (BuildContext context) {
+                return ProfilePage('1');
+              }));},
+              style: ButtonStyle(
+                  overlayColor: MaterialStateColor.resolveWith(
+                      (states) => Colors.deepPurpleAccent)),
+              child: Text(user1,
+                  style: const TextStyle(
+                      color: Colors.deepPurpleAccent, fontSize: 16)),
             ),
-            const Text(
-              'You have this many opportunities:',
+            const SizedBox(height: 10),
+            TextButton(
+              onPressed: () {Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (BuildContext context) {
+                return ProfilePage('2');
+              }));},
+              style: ButtonStyle(
+                  overlayColor: MaterialStateColor.resolveWith(
+                      (states) => Colors.deepPurpleAccent)),
+              child: Text(user2,
+                  style: const TextStyle(
+                      color: Colors.deepPurpleAccent, fontSize: 16)),
             ),
-            Text(
-              'boo',
-              style: Theme.of(context).textTheme.headlineMedium,
+            const SizedBox(height: 10),
+            TextButton(
+              onPressed: () {Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (BuildContext context) {
+                return ProfilePage('3');
+              }));},
+              style: ButtonStyle(
+                  overlayColor: MaterialStateColor.resolveWith(
+                      (states) => Colors.deepPurpleAccent)),
+              child: Text(user3,
+                  style: const TextStyle(
+                      color: Colors.deepPurpleAccent, fontSize: 16)),
             ),
-            TextButton(onPressed: createUser, child: Text(createText)),
-            TextButton(onPressed: getUser, child: Text(getText)),
-            TextButton(onPressed: removeUser, child: Text(removeText)),
+            const SizedBox(height: 10),
+            TextButton(
+              onPressed: () {Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (BuildContext context) {
+                return ProfilePage('4');
+              }));},
+              style: ButtonStyle(
+                  overlayColor: MaterialStateColor.resolveWith(
+                      (states) => Colors.deepPurpleAccent)),
+              child: Text(user4,
+                  style: const TextStyle(
+                      color: Colors.deepPurpleAccent, fontSize: 16)),
+            ),
+            const SizedBox(height: 10),
+            TextButton(
+              onPressed: () {Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (BuildContext context) {
+                return ProfilePage('5');
+              }));},
+              style: ButtonStyle(
+                  overlayColor: MaterialStateColor.resolveWith(
+                      (states) => Colors.deepPurpleAccent)),
+              child: Text(user5,
+                  style: const TextStyle(
+                      color: Colors.deepPurpleAccent, fontSize: 16)),
+            ),
+            const SizedBox(height: 20),
+
+            TextButton(
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        scrollable: true,
+                        title: const Text('Add New User'),
+                        content: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Form(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                TextFormField(
+                                    decoration: const InputDecoration(
+                                      labelText: 'ID (1-5)',
+                                      icon: Icon(Icons.account_box),
+                                    ),
+                                    onChanged: (String? newID) {
+                                      id = newID!;
+                                    }),
+                                TextFormField(
+                                    decoration: const InputDecoration(
+                                      labelText: 'Name',
+                                      icon: Icon(Icons.abc),
+                                    ),
+                                    onChanged: (String? newName) {
+                                      name = newName!;
+                                    }),
+                              ],
+                            ),
+                          ),
+                        ),
+                        actions: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                ElevatedButton(
+                                    child: const Text("Cancel"),
+                                    onPressed: () {
+                                      Navigator.pop(context, 'Cancel');
+                                    }),
+                                const SizedBox(width: 50),
+                                ElevatedButton(
+                                    child: const Text("Submit"),
+                                    onPressed: () {
+                                      createCustomUser(id, name, title);
+                                      setState(() {});
+                                      Navigator.pop(context, 'Cancel');
+                                    })
+                              ],
+                            ),
+                          ),
+                        ],
+                      );
+                    });
+              },
+              child: const Text('Add New User',
+                  style:
+                      TextStyle(color: Colors.deepPurpleAccent, fontSize: 16)),
+            ),
+            const SizedBox(height: 10),
+            TextButton(
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('Remove User'),
+                          content: TextFormField(
+                              decoration: const InputDecoration(
+                                labelText: 'ID',
+                                icon: Icon(Icons.account_box),
+                              ),
+                              onChanged: (String? newID) {
+                                removeID = newID!;
+                              }),
+                          actions: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                TextButton(
+                                    onPressed: () {
+                                      removeUser(removeID);
+                                      Navigator.pop(context, 'Cancel');
+                                    },
+                                    child: const Text('Confirm'))
+                              ],
+                            )
+                          ],
+                        );
+                      });
+                },
+                child: Text(removeText,
+                    style: const TextStyle(
+                        color: Colors.deepPurpleAccent, fontSize: 8))),
           ],
         ),
       ),
