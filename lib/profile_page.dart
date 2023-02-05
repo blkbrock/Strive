@@ -171,6 +171,7 @@ class _ProfilePage extends State<ProfilePage> {
               builder: (BuildContext context) {
                 return AlertDialog(
                   scrollable: true,
+                  backgroundColor: Colors.grey,
                   title: const Text('Send Message'),
                   content: Padding(
                     padding: const EdgeInsets.all(8.0),
