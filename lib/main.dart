@@ -125,7 +125,7 @@ class _StriveHomePageState extends State<StriveHomePage> {
           children: <Widget>[
             const SizedBox(height: 10),
             const Image(
-                image: AssetImage('assets/images/logo_transparent.png'),
+                image: AssetImage('assets/logo_transparent.png'),
                 width: 200,
                 height: 200),
             const SizedBox(height: 20),
