@@ -18,6 +18,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePage extends State<ProfilePage> {
   void showHistory() {}
   String user = '', msg = '',sendID='',sendMsg='';
+  num numMsgs=0;
 
   Future<DocumentSnapshot> retrieveProfileData(String id) async {
     return databaseUserRef.doc(id).get();
@@ -53,7 +54,7 @@ class _ProfilePage extends State<ProfilePage> {
 
   _ProfilePage() {
     getUserData();
-    Future.delayed(const Duration(milliseconds: 2000), () {
+    Future.delayed(const Duration(milliseconds: 1000), () {
       setState(() {});
     });
   }
@@ -76,33 +77,24 @@ class _ProfilePage extends State<ProfilePage> {
             ElevatedButton(
                 onPressed: () {
                   showDialog(
+                      barrierColor: Colors.black,
                       context: context,
                       builder: (BuildContext context) {
-                        return AlertDialog(
-                          scrollable: true,
-                          title: const Text('History'),
-                          content: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Form(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: const <Widget>[
-                                  ColoredBox(
-                                      color: Colors.white10,
-                                      child: Text('OVER 9000')),
-                                ],
-                              ),
-                            ),
-                          ),
-                          actions: [
-                            ElevatedButton(
-                                child: const Text("Close"),
-                                onPressed: () {
-                                  Navigator.of(context, rootNavigator: true)
-                                      .pop('dialog');
-                                  setState(() {});
-                                })
-                          ],
+                        return Scaffold(
+                          appBar: AppBar(title: const Text("Weight History")),
+                          body: ListView.builder(
+                            physics: const ClampingScrollPhysics(),
+                              itemCount: 25,
+                              itemBuilder: (BuildContext context, int index) {
+                                return ListTile(
+                                  splashColor: Colors.black,
+                                    leading: const Icon(Icons.list),
+                                    trailing: const Text(
+                                      "Date",
+                                      style: TextStyle(color: Colors.blueAccent, fontSize: 12),
+                                    ),
+                                    title: Text("List item $index", style: const TextStyle(color: Colors.deepPurpleAccent, fontSize: 16),));
+                              }),
                         );
                       });
                 },
@@ -111,55 +103,59 @@ class _ProfilePage extends State<ProfilePage> {
             ElevatedButton(
                 onPressed: () {
                   showDialog(
+                      barrierColor: Colors.black,
                       context: context,
                       builder: (BuildContext context) {
-                        return AlertDialog(
-                          scrollable: true,
-                          title: const Text('Workout History'),
-                          content: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Form(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: const <Widget>[
-                                  ColoredBox(
-                                      color: Colors.white10,
-                                      child: Text(
-                                          "'I twerked for 4hrs straight!' - Bork")),
-                                ],
-                              ),
-                            ),
-                          ),
-                          actions: [
-                            ElevatedButton(
-                                child: const Text("Close"),
-                                onPressed: () {
-                                  Navigator.of(context, rootNavigator: true)
-                                      .pop('dialog');
-                                  setState(() {});
-                                })
-                          ],
+                        return Scaffold(
+                          appBar: AppBar(title: const Text("Weight History")),
+                          body: ListView.builder(
+                              physics: const ClampingScrollPhysics(),
+                              itemCount: 25,
+                              itemBuilder: (BuildContext context, int index) {
+                                return ListTile(
+                                    splashColor: Colors.black,
+                                    leading: const Icon(Icons.list),
+                                    trailing: const Text(
+                                      "Date",
+                                      style: TextStyle(color: Colors.blueAccent, fontSize: 12),
+                                    ),
+                                    title: Text("List item $index", style: const TextStyle(color: Colors.deepPurpleAccent, fontSize: 16),));
+                              }),
                         );
                       });
                 },
                 child: const Text('Workout History')),
             const SizedBox(height: 100),
-            const Text(
-              'Messages:',
-              style: TextStyle(color: Colors.deepPurpleAccent, fontSize: 16),
-            ),
-            ElevatedButton(
-                child: const Text("refresh", style: TextStyle(fontSize: 12)),
-                onPressed: () {
-                  getUserMsg();
-                  Future.delayed(const Duration(milliseconds: 1000), () {
-                    setState(() {});
-                  });
-                }),
+
             const SizedBox(height: 20),
             Text(
               msg,
               style: const TextStyle(color: Colors.deepPurpleAccent, fontSize: 16),
+            ),
+            ElevatedButton(onPressed: () {
+              showDialog(
+                  barrierColor: Colors.black,
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Scaffold(
+                      appBar: AppBar(title: const Text("Messages")),
+                      body: ListView.builder(
+                          physics: const ClampingScrollPhysics(),
+                          itemCount: 25,
+                          itemBuilder: (BuildContext context, int index) {
+                            return ListTile(
+                                splashColor: Colors.black,
+                                leading: const Icon(Icons.list),
+                                trailing: const Text(
+                                  "From: _____",
+                                  style: TextStyle(color: Colors.blueAccent, fontSize: 12),
+                                ),
+                                title: Text("List item $index", style: const TextStyle(color: Colors.deepPurpleAccent, fontSize: 16),));
+                          }),
+                    );
+                  });
+            },
+              child: const Text("Messages ->"),
             ),
           ],
         ),
