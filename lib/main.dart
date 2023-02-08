@@ -51,9 +51,6 @@ class StriveHomePage extends StatefulWidget {
 
 class _StriveHomePageState extends State<StriveHomePage> {
   final databaseRef = FirebaseFirestore.instance.collection('Users');
-  final String createText = "Create User";
-  final String getText = "Sync Database";
-  final String removeText = "Remove User";
   String id = '', name = '', title = '', removeID = '';
   String user1 = '', user2 = '', user3 = '', user4 = '', user5 = '';
 
@@ -64,35 +61,35 @@ class _StriveHomePageState extends State<StriveHomePage> {
   Future<void> getUser() async {
     DocumentSnapshot data1 = await retrieveData("1");
     if (data1.data() != null) {
-      user1 = data1.data().toString();
+      user1 = data1.get("Nickname");
     }
     if (data1.data() == null) {
       user1 = '';
     }
     DocumentSnapshot data2 = await retrieveData("2");
     if (data2.data() != null) {
-      user2 = data2.data().toString();
+      user2 = data2.get("Nickname");
     }
     if (data2.data() == null) {
       user2 = '';
     }
     DocumentSnapshot data3 = await retrieveData("3");
     if (data3.data() != null) {
-      user3 = data3.data().toString();
+      user3 = data3.get("Nickname");
     }
     if (data3.data() == null) {
       user3 = '';
     }
     DocumentSnapshot data4 = await retrieveData("4");
     if (data4.data() != null) {
-      user4 = data4.data().toString();
+      user4 = data4.get("Nickname");
     }
     if (data4.data() == null) {
       user4 = '';
     }
     DocumentSnapshot data5 = await retrieveData("5");
     if (data5.data() != null) {
-      user5 = data5.data().toString();
+      user5 = data5.get("Nickname");
     }
     if (data5.data() == null) {
       user5 = '';
@@ -129,11 +126,11 @@ class _StriveHomePageState extends State<StriveHomePage> {
                 width: 200,
                 height: 200),
             const SizedBox(height: 20),
-            const Text('Choose Profile', style: TextStyle(color: Colors.deepPurpleAccent, fontSize: 24)),
+            const Text('Choose Profile', style: TextStyle(color: Colors.deepPurpleAccent, fontSize: 32)),
             TextButton(
                 onPressed: getUser,
-                child: Text(getText,
-                    style: const TextStyle(
+                child: const Text("Choose Profile:",
+                    style: TextStyle(
                         color: Colors.deepPurpleAccent, fontSize: 12))),
             const SizedBox(height: 20),
             TextButton(
@@ -298,8 +295,8 @@ class _StriveHomePageState extends State<StriveHomePage> {
                         );
                       });
                 },
-                child: Text(removeText,
-                    style: const TextStyle(
+                child: const Text("Remove User",
+                    style: TextStyle(
                         color: Colors.deepPurpleAccent, fontSize: 8))),
           ],
         ),
