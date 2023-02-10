@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:strive/main.dart';
 
 final databaseUserRef = FirebaseFirestore.instance.collection('Users');
@@ -31,7 +32,7 @@ class _ProfilePage extends State<ProfilePage> {
   Future<void> getUserData() async {
     DocumentSnapshot profileData = await retrieveProfileData(profileID);
     if (profileData.data() != null) {
-      user = profileData.data().toString();
+      user = profileData.get("Nickname");
     }
     if (profileData.data() == null) {
       user = '';
@@ -69,11 +70,18 @@ class _ProfilePage extends State<ProfilePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            const SizedBox(height: 50),
+            const SizedBox(height: 10),
             Text(user,
                 style: const TextStyle(
-                    color: Colors.deepPurpleAccent, fontSize: 24)),
-            const SizedBox(height: 100),
+                    color: Colors.deepPurpleAccent, fontSize: 28)),
+            const SizedBox(height: 50),
+            Lottie.asset(
+              'assets/astro_ride.json',
+              width: MediaQuery.of(context).size.width * 0.5,
+              height: MediaQuery.of(context).size.width * 0.5,
+              fit: BoxFit.fill,
+            ),
+            const SizedBox(height: 50),
             ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).push(
