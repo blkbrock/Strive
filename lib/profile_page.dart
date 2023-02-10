@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:strive/main.dart';
+import 'package:strive/weight_data.dart';
 
 final databaseUserRef = FirebaseFirestore.instance.collection('Users');
 final databaseMsgRef = FirebaseFirestore.instance.collection('Msg');
@@ -55,7 +56,7 @@ class _ProfilePage extends State<ProfilePage> {
 
   _ProfilePage() {
     getUserData();
-    Future.delayed(const Duration(milliseconds: 1000), () {
+    Future.delayed(const Duration(milliseconds: 500), () {
       setState(() {});
     });
   }
@@ -86,7 +87,7 @@ class _ProfilePage extends State<ProfilePage> {
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => weightList(),
+                      builder: (context) => const weightData(),
                     ),
                   );
                 },
@@ -214,42 +215,6 @@ class _ProfilePage extends State<ProfilePage> {
               });
         },
         child: const Icon(Icons.add),
-      ),
-    );
-  }
-}
-
-class weightList extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Weight Page"),
-      ),
-      body: Container(
-        child: StreamBuilder(
-          stream: FirebaseFirestore.instance.collection('history').snapshots(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return const Center(
-                child: CircularProgressIndicator(color: Colors.cyanAccent,),
-              );
-            }
-
-            final int? historyCount = snapshot.data?.docs.length;
-            return ListView.builder(
-              itemCount: historyCount,
-              itemBuilder: (context, index) {
-                final DocumentSnapshot history =
-                snapshot.data?.docs[index] as DocumentSnapshot<Object?>;
-                return ListTile(
-                  title: Text("Date: ${history['date']}", style: const TextStyle(color: Colors.white),),
-                  subtitle: Text("Rating: ${history['rating']}", style: const TextStyle(color: Colors.white70),),
-                );
-              },
-            );
-          },
-        ),
       ),
     );
   }
