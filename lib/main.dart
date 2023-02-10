@@ -1,9 +1,8 @@
-import '';
 import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
-
+import 'package:lottie/lottie.dart';
 import 'package:strive/profile_page.dart';
 
 void main() {
@@ -121,10 +120,18 @@ class _StriveHomePageState extends State<StriveHomePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             const SizedBox(height: 10),
+            Lottie.asset(
+              'assets/avocado_jump_rope.json',
+                width: MediaQuery.of(context).size.width * 0.5,
+        height: MediaQuery.of(context).size.width * 0.5,
+        fit: BoxFit.fill,
+            ),
+            /**
             const Image(
                 image: AssetImage('assets/logo_transparent.png'),
                 width: 200,
                 height: 200),
+                */
             const SizedBox(height: 20),
             const Text('Choose Profile', style: TextStyle(color: Colors.deepPurpleAccent, fontSize: 32)),
             TextButton(
