@@ -41,7 +41,10 @@ dependencies:
   cupertino_icons: ^1.0.2
   firebase_core: ^1.17.1
   cloud_firestore: ^3.1.17
+  firebase_database: ^9.0.16
   firebase_core_platform_interface: 4.5.1
+
+  lottie: ^2.2.0
 
 dev_dependencies:
   flutter_test:
@@ -72,6 +75,7 @@ flutter:
     - assets/images/logo.png
     - assets/logo_transparent.png
     - assets/strive_logo_1152.png
+    - assets/avocado_jump_rope.json
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
