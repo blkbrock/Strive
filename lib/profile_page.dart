@@ -76,27 +76,11 @@ class _ProfilePage extends State<ProfilePage> {
             const SizedBox(height: 100),
             ElevatedButton(
                 onPressed: () {
-                  showDialog(
-                      barrierColor: Colors.black,
-                      context: context,
-                      builder: (BuildContext context) {
-                        return Scaffold(
-                          appBar: AppBar(title: const Text("Weight History")),
-                          body: ListView.builder(
-                            physics: const ClampingScrollPhysics(),
-                              itemCount: 25,
-                              itemBuilder: (BuildContext context, int index) {
-                                return ListTile(
-                                  splashColor: Colors.black,
-                                    leading: const Icon(Icons.list),
-                                    trailing: const Text(
-                                      "Date",
-                                      style: TextStyle(color: Colors.blueAccent, fontSize: 12),
-                                    ),
-                                    title: Text("List item $index", style: const TextStyle(color: Colors.deepPurpleAccent, fontSize: 16),));
-                              }),
-                        );
-                      });
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => weightList(),
+                    ),
+                  );
                 },
                 child: const Text('Weight History')),
             const SizedBox(height: 50),
@@ -222,6 +206,42 @@ class _ProfilePage extends State<ProfilePage> {
               });
         },
         child: const Icon(Icons.add),
+      ),
+    );
+  }
+}
+
+class weightList extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Weight Page"),
+      ),
+      body: Container(
+        child: StreamBuilder(
+          stream: FirebaseFirestore.instance.collection('history').snapshots(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return const Center(
+                child: CircularProgressIndicator(color: Colors.cyanAccent,),
+              );
+            }
+
+            final int? historyCount = snapshot.data?.docs.length;
+            return ListView.builder(
+              itemCount: historyCount,
+              itemBuilder: (context, index) {
+                final DocumentSnapshot history =
+                snapshot.data?.docs[index] as DocumentSnapshot<Object?>;
+                return ListTile(
+                  title: Text("Date: ${history['date']}", style: const TextStyle(color: Colors.white),),
+                  subtitle: Text("Rating: ${history['rating']}", style: const TextStyle(color: Colors.white70),),
+                );
+              },
+            );
+          },
+        ),
       ),
     );
   }
