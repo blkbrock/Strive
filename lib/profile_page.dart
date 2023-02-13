@@ -1,16 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:strive/main.dart';
 import 'package:strive/weight_data.dart';
 
+import 'messages.dart';
+
 final databaseUserRef = FirebaseFirestore.instance.collection('Users');
-final databaseMsgRef = FirebaseFirestore.instance.collection('Msg');
-String profileID = '';
+final databaseMsgRef = FirebaseDatabase.instance.ref();
+String userName = '';
 
 class ProfilePage extends StatefulWidget {
   ProfilePage(String id, {super.key}) {
-    profileID = id;
+    userName = id;
   }
 
   @override
@@ -26,37 +28,12 @@ class _ProfilePage extends State<ProfilePage> {
     return databaseUserRef.doc(id).get();
   }
 
-  Future<DocumentSnapshot> retrieveMsgData(String id) async {
-    return databaseMsgRef.doc(id).get();
-  }
-
   Future<void> getUserData() async {
-    DocumentSnapshot profileData = await retrieveProfileData(profileID);
-    if (profileData.data() != null) {
-      user = profileData.get("Nickname");
-    }
-    if (profileData.data() == null) {
-      user = '';
-    }
-  }
-
-  Future<void> getUserMsg() async {
-    DocumentSnapshot msgData = await retrieveMsgData(profileID);
-    if (msgData.data() != null) {
-      msg = msgData.data().toString();
-    }
-    if (msgData.data() == null) {
-      msg = '';
-    }
-  }
-
-  void sendMessage(String id, String msg) {
-    databaseMsgRef.doc(id).set({"Msg": msg});
   }
 
   _ProfilePage() {
     getUserData();
-    Future.delayed(const Duration(milliseconds: 500), () {
+    Future.delayed(const Duration(milliseconds: 1000), () {
       setState(() {});
     });
   }
@@ -72,7 +49,7 @@ class _ProfilePage extends State<ProfilePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             const SizedBox(height: 10),
-            Text(user,
+            Text(userName,
                 style: const TextStyle(
                     color: Colors.deepPurpleAccent, fontSize: 28)),
             const SizedBox(height: 50),
@@ -87,7 +64,7 @@ class _ProfilePage extends State<ProfilePage> {
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => const weightData(),
+                      builder: (context) => WeightDataPage(userName),
                     ),
                   );
                 },
@@ -126,95 +103,15 @@ class _ProfilePage extends State<ProfilePage> {
               style: const TextStyle(color: Colors.deepPurpleAccent, fontSize: 16),
             ),
             ElevatedButton(onPressed: () {
-              showDialog(
-                  barrierColor: Colors.black,
-                  context: context,
-                  builder: (BuildContext context) {
-                    return Scaffold(
-                      appBar: AppBar(title: const Text("Messages")),
-                      body: ListView.builder(
-                          physics: const ClampingScrollPhysics(),
-                          itemCount: 25,
-                          itemBuilder: (BuildContext context, int index) {
-                            return ListTile(
-                                splashColor: Colors.black,
-                                leading: const Icon(Icons.list),
-                                trailing: const Text(
-                                  "From: _____",
-                                  style: TextStyle(color: Colors.blueAccent, fontSize: 12),
-                                ),
-                                title: Text("List item $index", style: const TextStyle(color: Colors.deepPurpleAccent, fontSize: 16),));
-                          }),
-                    );
-                  });
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (BuildContext context) {
+                return MessagePage(userName);
+              }));
             },
               child: const Text("Messages ->"),
             ),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  scrollable: true,
-                  backgroundColor: Colors.grey,
-                  title: const Text('Send Message'),
-                  content: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Form(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          TextFormField(
-                              decoration: const InputDecoration(
-                                labelText: 'ID (1-5)',
-                                icon: Icon(Icons.account_box),
-                              ),
-                              onChanged: (String? newID) {
-                                sendID = newID!;
-                              }),
-                          TextFormField(
-                              decoration: const InputDecoration(
-                                labelText: 'Message',
-                                icon: Icon(Icons.abc),
-                              ),
-                              onChanged: (String? newMsg) {
-                                sendMsg = newMsg!;
-                              }),
-                        ],
-                      ),
-                    ),
-                  ),
-                  actions: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          ElevatedButton(
-                              child: const Text("Cancel"),
-                              onPressed: () {
-                                Navigator.pop(context, 'Cancel');
-                              }),
-                          const SizedBox(width: 50),
-                          ElevatedButton(
-                              child: const Text("Submit"),
-                              onPressed: () {
-                                sendMessage(sendID, sendMsg);
-                                setState(() {});
-                                Navigator.pop(context, 'Cancel');
-                              })
-                        ],
-                      ),
-                    ),
-                  ],
-                );
-              });
-        },
-        child: const Icon(Icons.add),
       ),
     );
   }
