@@ -19,7 +19,6 @@ class MyApp extends StatelessWidget {
         builder: (context, snapshot) {
           //checking for errors
           if (snapshot.hasError) {
-            print("Couldn't connect!");
           }
           //Once complete, show app:
           if (snapshot.connectionState == ConnectionState.done) {
@@ -33,7 +32,7 @@ class MyApp extends StatelessWidget {
               home: const StriveHomePage(title: 'Strive Home'),
             );
           }
-          Widget loading = MaterialApp();
+          Widget loading = const MaterialApp();
           return loading;
         });
   }
@@ -126,12 +125,6 @@ class _StriveHomePageState extends State<StriveHomePage> {
         height: MediaQuery.of(context).size.width * 0.5,
         fit: BoxFit.fill,
             ),
-            /**
-            const Image(
-                image: AssetImage('assets/logo_transparent.png'),
-                width: 200,
-                height: 200),
-                */
             const SizedBox(height: 20),
             const Text('Choose Profile', style: TextStyle(color: Colors.deepPurpleAccent, fontSize: 32)),
             TextButton(
@@ -143,7 +136,7 @@ class _StriveHomePageState extends State<StriveHomePage> {
             TextButton(
               onPressed: () {Navigator.of(context)
                   .push(MaterialPageRoute(builder: (BuildContext context) {
-                return ProfilePage('1');
+                return ProfilePage(user1);
               }));},
               style: ButtonStyle(
                   overlayColor: MaterialStateColor.resolveWith(
@@ -156,8 +149,9 @@ class _StriveHomePageState extends State<StriveHomePage> {
             TextButton(
               onPressed: () {Navigator.of(context)
                   .push(MaterialPageRoute(builder: (BuildContext context) {
-                return ProfilePage('2');
-              }));},
+                return ProfilePage(user2);
+              }));
+                },
               style: ButtonStyle(
                   overlayColor: MaterialStateColor.resolveWith(
                       (states) => Colors.deepPurpleAccent)),
@@ -169,7 +163,7 @@ class _StriveHomePageState extends State<StriveHomePage> {
             TextButton(
               onPressed: () {Navigator.of(context)
                   .push(MaterialPageRoute(builder: (BuildContext context) {
-                return ProfilePage('3');
+                return ProfilePage(user3);
               }));},
               style: ButtonStyle(
                   overlayColor: MaterialStateColor.resolveWith(
@@ -182,7 +176,7 @@ class _StriveHomePageState extends State<StriveHomePage> {
             TextButton(
               onPressed: () {Navigator.of(context)
                   .push(MaterialPageRoute(builder: (BuildContext context) {
-                return ProfilePage('4');
+                return ProfilePage(user4);
               }));},
               style: ButtonStyle(
                   overlayColor: MaterialStateColor.resolveWith(
@@ -195,7 +189,7 @@ class _StriveHomePageState extends State<StriveHomePage> {
             TextButton(
               onPressed: () {Navigator.of(context)
                   .push(MaterialPageRoute(builder: (BuildContext context) {
-                return ProfilePage('5');
+                return ProfilePage(user5);
               }));},
               style: ButtonStyle(
                   overlayColor: MaterialStateColor.resolveWith(
