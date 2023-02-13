@@ -44,7 +44,7 @@ class _WeightDataPageState extends State<WeightDataPage> {
     databaseWeightRef
         .doc(userName)
         .collection('Weight')
-        .add({'Date': newDate, 'Weight': newWeight, 'bodyFat': newBodyFat});
+        .add({'Date': newDate, 'Weight': newWeight, 'BodyFat': newBodyFat});
   }
 
   void _showAddDialog() {
@@ -164,7 +164,7 @@ class _WeightDataPageState extends State<WeightDataPage> {
                     snapshot.data?.docs.map((DocumentSnapshot document) {
                           return ListTile(
                             title: Text(document.get('Date').toString()),
-                            subtitle: Text(document.get('Weight').toString()),
+                            subtitle: Text(document.get('Weight').toString()+document.get('BodyFat').toString()),
                           );
                         }) ??
                         []),
