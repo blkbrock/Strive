@@ -3,6 +3,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:strive/weight_page.dart';
+import 'package:strive/workout_page.dart';
 
 import 'messages.dart';
 
@@ -72,27 +73,10 @@ class _ProfilePage extends State<ProfilePage> {
             const SizedBox(height: 50),
             ElevatedButton(
                 onPressed: () {
-                  showDialog(
-                      barrierColor: Colors.black,
-                      context: context,
-                      builder: (BuildContext context) {
-                        return Scaffold(
-                          appBar: AppBar(title: const Text("Weight History")),
-                          body: ListView.builder(
-                              physics: const ClampingScrollPhysics(),
-                              itemCount: 25,
-                              itemBuilder: (BuildContext context, int index) {
-                                return ListTile(
-                                    splashColor: Colors.black,
-                                    leading: const Icon(Icons.list),
-                                    trailing: const Text(
-                                      "Date",
-                                      style: TextStyle(color: Colors.blueAccent, fontSize: 12),
-                                    ),
-                                    title: Text("List item $index", style: const TextStyle(color: Colors.deepPurpleAccent, fontSize: 16),));
-                              }),
-                        );
-                      });
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (BuildContext context) {
+                    return WorkoutDataPage(userName);
+                  }));
                 },
                 child: const Text('Workout History')),
             const SizedBox(height: 100),
