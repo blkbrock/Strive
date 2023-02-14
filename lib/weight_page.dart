@@ -1,9 +1,11 @@
 import 'dart:core';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart' show CalendarCarousel;
+import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart'
+    show CalendarCarousel;
 import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_calendar_carousel/classes/event_list.dart';
+import 'package:intl/intl.dart' show DateFormat;
 
 String userName = '';
 
@@ -19,25 +21,38 @@ class WeightDataPage extends StatefulWidget {
 class _WeightDataPageState extends State<WeightDataPage> {
   final databaseWeightRef = FirebaseFirestore.instance.collection('Users');
   late Stream<QuerySnapshot> _stream;
-  late DateTime _currentDate = DateTime(2019, 2, 3);
+  late DateTime _currentDate = DateTime(2023, 2, 14);
+  String _currentMonth = DateFormat.yMMM().format(DateTime(2023, 2, 14));
+  DateTime _targetDateTime = DateTime(2023, 2, 14);
   String _date = '', _weight = '', _bodyFat = '';
 
   final EventList<Event> _markedDateMap = EventList<Event>(
     events: {
-      DateTime(2019, 2, 10): [
+      DateTime(2023, 2, 10): [
         Event(
-          date: DateTime(2019, 2, 10),
+          date: DateTime(2023, 2, 10),
           title: 'Event 1',
-          icon: Icons.accessible_forward as Widget,
+          icon: _eventIcon,
           dot: Container(
             margin: const EdgeInsets.symmetric(horizontal: 1.0),
-            color: Colors.red,
+            color: Colors.deepPurpleAccent,
             height: 5.0,
             width: 5.0,
           ),
         ),
       ],
     },
+  );
+
+  static final Widget _eventIcon = Container(
+    decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: const BorderRadius.all(Radius.circular(1000)),
+        border: Border.all(color: Colors.deepPurpleAccent, width: 2.0)),
+    child: const Icon(
+      Icons.person,
+      color: Colors.blueAccent,
+    ),
   );
 
   void uploadEntry(String newDate, String newWeight, String newBodyFat) async {
@@ -57,46 +72,91 @@ class _WeightDataPageState extends State<WeightDataPage> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                CalendarCarousel<Event>(
-                onDayPressed: (date, events) {
-          setState(() {
-          _currentDate = date;
-          _date = _currentDate.toString();
-          });
-          },
-            weekendTextStyle: const TextStyle(
-              color: Colors.red,
-            ),
-            thisMonthDayBorderColor: Colors.grey,
+                TextButton(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return Scaffold(
+                            backgroundColor: const Color(0xFF222222),
+                            appBar: AppBar(
+                              title: const Text('Calendar'),
+                            ),
+                            body: Column(
+                              children: <Widget>[
+                                CalendarCarousel<Event>(
+                                  onDayPressed: (date, events) {
+                                    setState(() {
+                                      _currentDate = date;
+                                      _date = _currentDate.toString();
+                                      _targetDateTime = date;
+                                      _currentMonth = DateFormat.yMMM().format(_targetDateTime);
+                                    });
+                                  },
+                                  onCalendarChanged: (DateTime date) {
+                                    setState(() {
+                                      _targetDateTime = date;
+                                      _currentMonth = DateFormat.yMMM().format(_targetDateTime);
+                                    });
+                                  },
+                                  weekdayTextStyle: const TextStyle(
+                                    color: Colors.deepPurpleAccent,
+                                  ),
+                                  weekendTextStyle: const TextStyle(
+                                    color: Colors.deepPurpleAccent,
+                                  ),
+                                  thisMonthDayBorderColor: Colors.grey,
 //          weekDays: null, /// for pass null when you do not want to render weekDays
-            headerText: 'Custom Header',
-            weekFormat: true,
-            markedDatesMap: _markedDateMap,
-            height: 200.0,
-            selectedDateTime: _currentDate,
-            showIconBehindDayText: true,
+                                  headerText: _currentMonth,
+                                  weekFormat: true,
+                                  showOnlyCurrentMonthDate: false,
+                                  markedDatesMap: _markedDateMap,
+                                  height: 300.0,
+                                  selectedDateTime: _currentDate,
+                                  targetDateTime: _targetDateTime,
+                                  selectedDayBorderColor: Colors.deepPurpleAccent,
+                                  selectedDayButtonColor: Colors.white10,
+                                  showIconBehindDayText: true,
 //          daysHaveCircularBorder: false, /// null for not rendering any border, true for circular border, false for rectangular border
-            customGridViewPhysics: const NeverScrollableScrollPhysics(),
-            markedDateShowIcon: true,
-            markedDateIconMaxShown: 2,
-            selectedDayTextStyle: const TextStyle(
-              color: Colors.yellow,
-            ),
-            todayTextStyle: const TextStyle(
-              color: Colors.blue,
-            ),
-            markedDateIconBuilder: (event) {
-              return event.icon ?? const Icon(Icons.help_outline);
-            },
-            minSelectedDate: _currentDate.subtract(const Duration(days: 360)),
-            maxSelectedDate: _currentDate.add(const Duration(days: 360)),
-            todayButtonColor: Colors.transparent,
-            todayBorderColor: Colors.green,
-            markedDateMoreShowTotal:
-            true, // null for not showing hidden events indicator
-//          markedDateIconMargin: 9,
-//          markedDateIconOffset: 3,
-          ),
+                                  customGridViewPhysics: const NeverScrollableScrollPhysics(),
+                                  markedDateShowIcon: true,
+                                  markedDateIconMaxShown: 2,
+                                  selectedDayTextStyle: const TextStyle(
+                                    color: Colors.deepPurpleAccent,
+                                  ),
+                                  todayTextStyle: const TextStyle(
+                                    color: Colors.blue,
+                                  ),
+                                  markedDateIconBuilder: (event) {
+                                    return event.icon ?? const Icon(Icons.help_outline);
+                                  },
+                                  minSelectedDate:
+                                  _currentDate.subtract(const Duration(days: 360)),
+                                  maxSelectedDate: _currentDate.add(const Duration(days: 360)),
+                                  todayButtonColor: Colors.transparent,
+                                  todayBorderColor: Colors.white10,
+                                ),
+                                MaterialButton(
+                                  child: const Text('Cancel'),
+                                  onPressed: () {
+                                    Navigator.pop(context, 'Cancel');
+                                  },
+                                ),
+                                MaterialButton(
+                                  child: const Text('Submit'),
+                                  onPressed: () {
+                                      setState(() {});
+                                      Navigator.pop(context, 'Cancel');
+                                  },
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                    },
+                    child: Text(_currentDate.toString())),
+
                 TextFormField(
                   decoration: const InputDecoration(labelText: 'Weight'),
                   onChanged: (String? newWeight) {
@@ -164,7 +224,8 @@ class _WeightDataPageState extends State<WeightDataPage> {
                     snapshot.data?.docs.map((DocumentSnapshot document) {
                           return ListTile(
                             title: Text(document.get('Date').toString()),
-                            subtitle: Text(document.get('Weight').toString()+document.get('BodyFat').toString()),
+                            subtitle: Text(document.get('Weight').toString() +
+                                document.get('BodyFat').toString()),
                           );
                         }) ??
                         []),
