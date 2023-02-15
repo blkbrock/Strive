@@ -18,8 +18,7 @@ class MyApp extends StatelessWidget {
         future: Firebase.initializeApp(),
         builder: (context, snapshot) {
           //checking for errors
-          if (snapshot.hasError) {
-          }
+          if (snapshot.hasError) {}
           //Once complete, show app:
           if (snapshot.connectionState == ConnectionState.done) {
             return MaterialApp(
@@ -102,12 +101,14 @@ class _StriveHomePageState extends State<StriveHomePage> {
   void removeUser(String id) {
     databaseRef.doc(id).delete();
   }
+
   _StriveHomePageState() {
-  getUser();
-  Future.delayed(const Duration(milliseconds: 2000), () {
-  setState(() {});
-  });
-}
+    getUser();
+    Future.delayed(const Duration(milliseconds: 2000), () {
+      setState(() {});
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -116,189 +117,215 @@ class _StriveHomePageState extends State<StriveHomePage> {
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            const SizedBox(height: 10),
-            Lottie.asset(
-              'assets/avocado_jump_rope.json',
-                width: MediaQuery.of(context).size.width * 0.5,
-        height: MediaQuery.of(context).size.width * 0.5,
-        fit: BoxFit.fill,
+            Flexible(
+              flex: 3,
+              child: Column(
+                children: <Widget>[
+                  Lottie.asset(
+                    'assets/avocado_jump_rope.json',
+                    width: MediaQuery.of(context).size.width * 0.5,
+                    height: MediaQuery.of(context).size.width * 0.5,
+                    fit: BoxFit.fill,
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(height: 20),
-            const Text('Choose Profile', style: TextStyle(color: Colors.deepPurpleAccent, fontSize: 32)),
-            TextButton(
-                onPressed: getUser,
-                child: const Text("Choose Profile:",
-                    style: TextStyle(
-                        color: Colors.deepPurpleAccent, fontSize: 12))),
-            const SizedBox(height: 20),
-            TextButton(
-              onPressed: () {Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (BuildContext context) {
-                return ProfilePage(user1);
-              }));},
-              style: ButtonStyle(
-                  overlayColor: MaterialStateColor.resolveWith(
-                      (states) => Colors.deepPurpleAccent)),
-              child: Text(user1,
-                  style: const TextStyle(
-                      color: Colors.deepPurpleAccent, fontSize: 16)),
+            Flexible(
+              flex: 5,
+              child: Column(
+                children: <Widget>[
+                  const Text('Choose Profile',
+                      style: TextStyle(
+                          color: Colors.deepPurpleAccent, fontSize: 32)),
+                  TextButton(
+                      onPressed: getUser,
+                      child: const Text("refresh",
+                          style: TextStyle(
+                              color: Colors.deepPurpleAccent, fontSize: 10))),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (BuildContext context) {
+                        return ProfilePage(user1);
+                      }));
+                    },
+                    style: ButtonStyle(
+                        overlayColor: MaterialStateColor.resolveWith(
+                            (states) => Colors.deepPurpleAccent)),
+                    child: Text(user1,
+                        style: const TextStyle(
+                            color: Colors.deepPurpleAccent, fontSize: 16)),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (BuildContext context) {
+                        return ProfilePage(user2);
+                      }));
+                    },
+                    style: ButtonStyle(
+                        overlayColor: MaterialStateColor.resolveWith(
+                            (states) => Colors.deepPurpleAccent)),
+                    child: Text(user2,
+                        style: const TextStyle(
+                            color: Colors.deepPurpleAccent, fontSize: 16)),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (BuildContext context) {
+                        return ProfilePage(user3);
+                      }));
+                    },
+                    style: ButtonStyle(
+                        overlayColor: MaterialStateColor.resolveWith(
+                            (states) => Colors.deepPurpleAccent)),
+                    child: Text(user3,
+                        style: const TextStyle(
+                            color: Colors.deepPurpleAccent, fontSize: 16)),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (BuildContext context) {
+                        return ProfilePage(user4);
+                      }));
+                    },
+                    style: ButtonStyle(
+                        overlayColor: MaterialStateColor.resolveWith(
+                            (states) => Colors.deepPurpleAccent)),
+                    child: Text(user4,
+                        style: const TextStyle(
+                            color: Colors.deepPurpleAccent, fontSize: 16)),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (BuildContext context) {
+                        return ProfilePage(user5);
+                      }));
+                    },
+                    style: ButtonStyle(
+                        overlayColor: MaterialStateColor.resolveWith(
+                            (states) => Colors.deepPurpleAccent)),
+                    child: Text(user5,
+                        style: const TextStyle(
+                            color: Colors.deepPurpleAccent, fontSize: 16)),
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(height: 10),
-            TextButton(
-              onPressed: () {Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (BuildContext context) {
-                return ProfilePage(user2);
-              }));
-                },
-              style: ButtonStyle(
-                  overlayColor: MaterialStateColor.resolveWith(
-                      (states) => Colors.deepPurpleAccent)),
-              child: Text(user2,
-                  style: const TextStyle(
-                      color: Colors.deepPurpleAccent, fontSize: 16)),
-            ),
-            const SizedBox(height: 10),
-            TextButton(
-              onPressed: () {Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (BuildContext context) {
-                return ProfilePage(user3);
-              }));},
-              style: ButtonStyle(
-                  overlayColor: MaterialStateColor.resolveWith(
-                      (states) => Colors.deepPurpleAccent)),
-              child: Text(user3,
-                  style: const TextStyle(
-                      color: Colors.deepPurpleAccent, fontSize: 16)),
-            ),
-            const SizedBox(height: 10),
-            TextButton(
-              onPressed: () {Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (BuildContext context) {
-                return ProfilePage(user4);
-              }));},
-              style: ButtonStyle(
-                  overlayColor: MaterialStateColor.resolveWith(
-                      (states) => Colors.deepPurpleAccent)),
-              child: Text(user4,
-                  style: const TextStyle(
-                      color: Colors.deepPurpleAccent, fontSize: 16)),
-            ),
-            const SizedBox(height: 10),
-            TextButton(
-              onPressed: () {Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (BuildContext context) {
-                return ProfilePage(user5);
-              }));},
-              style: ButtonStyle(
-                  overlayColor: MaterialStateColor.resolveWith(
-                      (states) => Colors.deepPurpleAccent)),
-              child: Text(user5,
-                  style: const TextStyle(
-                      color: Colors.deepPurpleAccent, fontSize: 16)),
-            ),
-            const SizedBox(height: 20),
-
-            TextButton(
-              onPressed: () {
-                showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        scrollable: true,
-                        title: const Text('Add New User'),
-                        content: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Form(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                TextFormField(
+            Flexible(
+                flex: 2,
+                child: Column(
+                  children: <Widget>[
+                    TextButton(
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                scrollable: true,
+                                title: const Text('Add New User'),
+                                content: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Form(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        TextFormField(
+                                            decoration: const InputDecoration(
+                                              labelText: 'ID (1-5)',
+                                              icon: Icon(Icons.account_box),
+                                            ),
+                                            onChanged: (String? newID) {
+                                              id = newID!;
+                                            }),
+                                        TextFormField(
+                                            decoration: const InputDecoration(
+                                              labelText: 'Name',
+                                              icon: Icon(Icons.abc),
+                                            ),
+                                            onChanged: (String? newName) {
+                                              name = newName!;
+                                            }),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                actions: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        ElevatedButton(
+                                            child: const Text("Cancel"),
+                                            onPressed: () {
+                                              Navigator.pop(context, 'Cancel');
+                                            }),
+                                        const SizedBox(width: 50),
+                                        ElevatedButton(
+                                            child: const Text("Submit"),
+                                            onPressed: () {
+                                              createCustomUser(id, name, title);
+                                              setState(() {});
+                                              Navigator.pop(context, 'Cancel');
+                                            })
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              );
+                            });
+                      },
+                      child: const Text('Add New User',
+                          style: TextStyle(
+                              color: Colors.deepPurpleAccent, fontSize: 16)),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text('Remove User'),
+                                content: TextFormField(
                                     decoration: const InputDecoration(
-                                      labelText: 'ID (1-5)',
+                                      labelText: 'ID',
                                       icon: Icon(Icons.account_box),
                                     ),
                                     onChanged: (String? newID) {
-                                      id = newID!;
+                                      removeID = newID!;
                                     }),
-                                TextFormField(
-                                    decoration: const InputDecoration(
-                                      labelText: 'Name',
-                                      icon: Icon(Icons.abc),
-                                    ),
-                                    onChanged: (String? newName) {
-                                      name = newName!;
-                                    }),
-                              ],
-                            ),
-                          ),
-                        ),
-                        actions: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                ElevatedButton(
-                                    child: const Text("Cancel"),
-                                    onPressed: () {
-                                      Navigator.pop(context, 'Cancel');
-                                    }),
-                                const SizedBox(width: 50),
-                                ElevatedButton(
-                                    child: const Text("Submit"),
-                                    onPressed: () {
-                                      createCustomUser(id, name, title);
-                                      setState(() {});
-                                      Navigator.pop(context, 'Cancel');
-                                    })
-                              ],
-                            ),
-                          ),
-                        ],
-                      );
-                    });
-              },
-              child: const Text('Add New User',
-                  style:
-                      TextStyle(color: Colors.deepPurpleAccent, fontSize: 16)),
-            ),
-            const SizedBox(height: 10),
-            TextButton(
-                onPressed: () {
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: const Text('Remove User'),
-                          content: TextFormField(
-                              decoration: const InputDecoration(
-                                labelText: 'ID',
-                                icon: Icon(Icons.account_box),
-                              ),
-                              onChanged: (String? newID) {
-                                removeID = newID!;
-                              }),
-                          actions: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                TextButton(
-                                    onPressed: () {
-                                      removeUser(removeID);
-                                      Navigator.pop(context, 'Cancel');
-                                    },
-                                    child: const Text('Confirm'))
-                              ],
-                            )
-                          ],
-                        );
-                      });
-                },
-                child: const Text("Remove User",
-                    style: TextStyle(
-                        color: Colors.deepPurpleAccent, fontSize: 8))),
+                                actions: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      TextButton(
+                                          onPressed: () {
+                                            removeUser(removeID);
+                                            Navigator.pop(context, 'Cancel');
+                                          },
+                                          child: const Text('Confirm'))
+                                    ],
+                                  )
+                                ],
+                              );
+                            });
+                      },
+                      child: const Text(
+                        "Remove User",
+                        style: TextStyle(
+                            color: Colors.deepPurpleAccent, fontSize: 8),
+                      ),
+                    ),
+                  ],
+                )),
           ],
         ),
       ),
