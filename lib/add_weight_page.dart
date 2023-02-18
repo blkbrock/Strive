@@ -20,11 +20,13 @@ class AddWeightPage extends StatefulWidget {
 
 class _AddWeightPageState extends State<AddWeightPage> {
   final databaseWeightRef = FirebaseFirestore.instance.collection('Users');
-  DateTime _currentDate = (DateTime.now());
-  DateTime _selectedDate = (DateTime.now());
-  String _currentDateString = DateFormat.MMMd().format(DateTime.now());
-  String _currentMonth = DateFormat.yMMM().format(DateTime(2023, 2, 14));
-  DateTime _targetDateTime = DateTime(2023, 2, 14);
+  final DateTime _currentDate = (DateTime.now());
+  late DateTime _selectedDate;
+  late DateTime _targetDateTime;
+  late String _selectedDateString;
+  late String _currentDateString;
+  late String _targetDateString;
+
   String _date = '', _weight = '', _bodyFat = '';
 
   final EventList<Event> _markedDateMap = EventList<Event>(
@@ -65,39 +67,10 @@ class _AddWeightPageState extends State<AddWeightPage> {
 
   @override
   void initState() {
-    _markedDateMap.add(
-        DateTime(2019, 2, 25),
-        Event(
-          date: DateTime(2019, 2, 25),
-          title: 'Event 5',
-          icon: _eventIcon,
-        ));
-
-    _markedDateMap.add(
-        DateTime(2019, 2, 10),
-        Event(
-          date: DateTime(2019, 2, 10),
-          title: 'Event 4',
-          icon: _eventIcon,
-        ));
-
-    _markedDateMap.addAll(DateTime(2019, 2, 11), [
-      Event(
-        date: DateTime(2019, 2, 11),
-        title: 'Event 1',
-        icon: _eventIcon,
-      ),
-      Event(
-        date: DateTime(2019, 2, 11),
-        title: 'Event 2',
-        icon: _eventIcon,
-      ),
-      Event(
-        date: DateTime(2019, 2, 11),
-        title: 'Event 3',
-        icon: _eventIcon,
-      ),
-    ]);
+    _selectedDate = _currentDate;
+    _targetDateTime = _currentDate;
+    _targetDateString = DateFormat.yMMM().format(_currentDate);
+    _selectedDateString = DateFormat.yMMM().format(_currentDate);
     super.initState();
   }
 
@@ -110,18 +83,15 @@ class _AddWeightPageState extends State<AddWeightPage> {
           CalendarCarousel<Event>(
             onDayPressed: (date, events) {
               setState(() {
-                _currentDate = date;
-                _date = _currentDate.toString();
-                _targetDateTime = date;
-                _currentMonth = DateFormat.yMMM().format(_targetDateTime);
                 _selectedDate = date;
-                _currentDateString = DateFormat.MMMd().format(_selectedDate);
+                _selectedDateString = DateFormat.MMMd().format(_selectedDate);
+                _date = DateFormat.yMMMd().format(_selectedDate);
               });
             },
             onCalendarChanged: (DateTime date) {
               setState(() {
                 _targetDateTime = date;
-                _currentMonth = DateFormat.yMMM().format(_targetDateTime);
+                _targetDateString = DateFormat.yMMM().format(_targetDateTime);
               });
             },
             weekdayTextStyle: const TextStyle(
@@ -131,7 +101,7 @@ class _AddWeightPageState extends State<AddWeightPage> {
               color: Colors.deepPurpleAccent,
             ),
             thisMonthDayBorderColor: Colors.grey,
-            headerText: _currentMonth,
+            headerText: _targetDateString,
             weekFormat: true,
             showOnlyCurrentMonthDate: false,
             markedDatesMap: _markedDateMap,
@@ -168,7 +138,7 @@ class _AddWeightPageState extends State<AddWeightPage> {
                   setState(() {
                     _targetDateTime = DateTime(
                         _targetDateTime.year, _targetDateTime.month - 1);
-                    _currentMonth = DateFormat.yMMM().format(_targetDateTime);
+                    _targetDateString = DateFormat.yMMM().format(_targetDateTime);
                   });
                 },
               ),
@@ -179,7 +149,7 @@ class _AddWeightPageState extends State<AddWeightPage> {
                   setState(() {
                     _targetDateTime = DateTime(
                         _targetDateTime.year, _targetDateTime.month + 1);
-                    _currentMonth = DateFormat.yMMM().format(_targetDateTime);
+                    _targetDateString = DateFormat.yMMM().format(_targetDateTime);
                   });
                 },
               )
@@ -188,7 +158,7 @@ class _AddWeightPageState extends State<AddWeightPage> {
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[Text(
-              _currentDateString,
+              _selectedDateString,
               style: const TextStyle(
                 color: Colors.blueAccent,
                 fontWeight: FontWeight.bold,
