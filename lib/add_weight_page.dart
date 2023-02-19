@@ -77,6 +77,7 @@ class _AddWeightPageState extends State<AddWeightPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
         backgroundColor: const Color(0xFF222222),
         appBar: AppBar(title: const Text('Add Entry')),
         body: Column(children: <Widget>[
@@ -129,32 +130,7 @@ class _AddWeightPageState extends State<AddWeightPage> {
             todayButtonColor: Colors.transparent,
             todayBorderColor: Colors.white10,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              TextButton(
-                child: const Text('Month -'),
-                onPressed: () {
-                  setState(() {
-                    _targetDateTime = DateTime(
-                        _targetDateTime.year, _targetDateTime.month - 1);
-                    _targetDateString = DateFormat.yMMM().format(_targetDateTime);
-                  });
-                },
-              ),
-              const SizedBox(width: 200),
-              TextButton(
-                child: const Text('Month +'),
-                onPressed: () {
-                  setState(() {
-                    _targetDateTime = DateTime(
-                        _targetDateTime.year, _targetDateTime.month + 1);
-                    _targetDateString = DateFormat.yMMM().format(_targetDateTime);
-                  });
-                },
-              )
-            ],
-          ),
+
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[Text(
@@ -168,13 +144,18 @@ class _AddWeightPageState extends State<AddWeightPage> {
             ],
           ),
           TextFormField(
-            decoration: const InputDecoration(labelText: 'Weight', labelStyle: TextStyle(color: Colors.blueAccent)),
+            textAlign: TextAlign.center,
+            decoration: const InputDecoration(
+                label: Center(child: Text('Weight', style: TextStyle(color: Colors.blueAccent)),
+                )),
             onChanged: (String? newWeight) {
               _weight = newWeight!;
             },
           ),
           TextFormField(
-            decoration: const InputDecoration(labelText: 'Body Fat Percentage', labelStyle: TextStyle(color: Colors.blueAccent)),
+            decoration: const InputDecoration(
+                label: Center(child: Text('Body Fat %', style: TextStyle(color: Colors.blueAccent)),
+                )),
             onChanged: (String? newBodyFat) {
               _bodyFat = newBodyFat!;
             },
