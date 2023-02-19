@@ -31,19 +31,6 @@ class _AddWeightPageState extends State<AddWeightPage> {
 
   final EventList<Event> _markedDateMap = EventList<Event>(
     events: {
-      DateTime(2023, 2, 10): [
-        Event(
-          date: DateTime.now(),
-          title: 'Today',
-          icon: _eventIcon,
-          dot: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 1.0),
-            color: Colors.deepPurpleAccent,
-            height: 5.0,
-            width: 5.0,
-          ),
-        ),
-      ],
     },
   );
 
@@ -70,7 +57,7 @@ class _AddWeightPageState extends State<AddWeightPage> {
     _selectedDate = _currentDate;
     _targetDateTime = _currentDate;
     _targetDateString = DateFormat.yMMM().format(_currentDate);
-    _selectedDateString = DateFormat.yMMM().format(_currentDate);
+    _selectedDateString = DateFormat.MMMd().format(_currentDate);
     super.initState();
   }
 
@@ -120,7 +107,10 @@ class _AddWeightPageState extends State<AddWeightPage> {
               color: Colors.deepPurpleAccent,
             ),
             todayTextStyle: const TextStyle(
-              color: Colors.blue,
+              color: Colors.blueAccent,
+            ),
+            daysTextStyle: const TextStyle(
+              color: Colors.deepPurpleAccent,
             ),
             markedDateIconBuilder: (event) {
               return event.icon ?? const Icon(Icons.help_outline);
@@ -143,6 +133,7 @@ class _AddWeightPageState extends State<AddWeightPage> {
             ),
             ],
           ),
+          const SizedBox(height: 20.0),
           TextFormField(
             textAlign: TextAlign.center,
             decoration: const InputDecoration(
@@ -152,7 +143,9 @@ class _AddWeightPageState extends State<AddWeightPage> {
               _weight = newWeight!;
             },
           ),
+          const SizedBox(height: 20.0),
           TextFormField(
+            textAlign: TextAlign.center,
             decoration: const InputDecoration(
                 label: Center(child: Text('Body Fat %', style: TextStyle(color: Colors.blueAccent)),
                 )),
@@ -160,6 +153,7 @@ class _AddWeightPageState extends State<AddWeightPage> {
               _bodyFat = newBodyFat!;
             },
           ),
+          const SizedBox(height: 20.0),
           MaterialButton(
             child: const Text('Submit', style: TextStyle(color: Colors.deepPurple)),
             onPressed: () {
