@@ -1,13 +1,20 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:strive/add_weight_page.dart';
+import 'package:strive/community_page.dart';
+import 'package:strive/food_page.dart';
+import 'package:strive/profile_page.dart';
+import 'package:strive/strive_colors.dart';
+import 'package:strive/weight_page.dart';
+import 'package:strive/workout_page.dart';
 
 
 final databaseMsgRef = FirebaseDatabase.instance.ref();
-String profileID = '';
+String userName = '';
 
 class MessagePage extends StatefulWidget {
   MessagePage(String id, {super.key}) {
-    profileID = id;
+    userName = id;
   }
   @override
   State<MessagePage> createState() => _MessagesPage();
@@ -46,7 +53,7 @@ class _MessagesPage extends State<MessagePage> {
   }
 
   void sendMessage(String message) async {
-    String name = profileID;
+    String name = userName;
     databaseMsgRef.push().set({'Sender': name, 'message': message});
   }
 
@@ -61,14 +68,49 @@ class _MessagesPage extends State<MessagePage> {
     });
   }
 
-  @override
+ @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Messages")),
-      body: IntrinsicHeight(
-          child: Column(
-            children: <Widget>[
-              Expanded(
+      appBar: AppBar(
+        toolbarHeight: 100,
+        flexibleSpace: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            IconButton(
+              icon: Image.asset("assets/strive_logo.png"),
+              iconSize: 140,
+              onPressed: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (BuildContext context) {
+                  return CommunityPage(userName);
+                }));
+              },
+            ),
+          ],
+        ),
+      ),
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/strive_background.png"),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Column(
+          children: [
+            Flexible(
+              flex: 9,
+              fit: FlexFit.tight,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  const Spacer(flex: 1),
+                  Text(userName,
+                      style: const TextStyle(
+                          color: Colors.deepPurpleAccent, fontSize: 28)),
+                  const Spacer(flex: 1),
+                  Expanded(
                 child: SingleChildScrollView(
                   child: Column(
                     children: messagesQueue._queue.reversed.toList(),
@@ -91,9 +133,75 @@ class _MessagesPage extends State<MessagePage> {
                       hintText: 'Type a message!'
                   ),
                 ),
-              )
-            ],
-          )
+              ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (BuildContext context) {
+                        return AddWeightPage(userName);
+                      }));
+                    },
+                    child: const Text('Add Workout Data'),
+                  ),
+                ],
+              ),
+            ),
+            Flexible(
+              flex: 1,
+              fit: FlexFit.tight,
+              child: Container(
+                decoration: const BoxDecoration(color: strive_lavender),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      icon: Image.asset("assets/star_icon_dark.png"),
+                      onPressed: () {
+                        Navigator.of(context).push(
+                            MaterialPageRoute(builder: (BuildContext context) {
+                          return ProfilePage(userName);
+                        }));
+                      },
+                    ),
+                    const Spacer(flex: 1),
+                    IconButton(
+                      icon: Image.asset("assets/apple_icon_dark.png"),
+                      onPressed: () {
+                        Navigator.of(context).push(
+                            MaterialPageRoute(builder: (BuildContext context) {
+                          return FoodPage(userName);
+                        }));
+                      },
+                    ),
+                    const Spacer(flex: 1),
+                    IconButton(
+                      icon: Image.asset("assets/weights_icon_dark.png"),
+                      onPressed: () {
+                        Navigator.of(context).push(
+                            MaterialPageRoute(builder: (BuildContext context) {
+                          return WorkoutPage(userName);
+                        }));
+                        },
+                    ),
+                    const Spacer(flex: 1),
+                    IconButton(
+                      icon: Image.asset("assets/scale_icon_dark.png"),
+                      onPressed: () {Navigator.of(context).push(
+                            MaterialPageRoute(builder: (BuildContext context) {
+                          return WeightPage(userName);
+                        }));},
+                    ),
+                    const Spacer(flex: 1),
+                    IconButton(
+                      icon: Image.asset("assets/message_icon_light.png"),
+                      onPressed: () {},
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
