@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:lottie/lottie.dart';
 import 'package:strive/profile_page.dart';
+import 'package:strive/strive_colors.dart';
 
 void main() {
   runApp(const MyApp());
@@ -25,7 +26,18 @@ class MyApp extends StatelessWidget {
               title: 'Strive!',
               debugShowCheckedModeBanner: false,
               theme: ThemeData(
-                primarySwatch: Colors.deepPurple,
+                primarySwatch: const MaterialColor(0xFFE2E2F0, <int, Color>{
+                  50: Color(0xFFE2E2F0),
+                  100: Color(0xFFE2E2F0),
+                  200: Color(0xFFE2E2F0),
+                  300: Color(0xFFE2E2F0),
+                  400: Color(0xFFE2E2F0),
+                  500: Color(0xFFE2E2F0),
+                  600: Color(0xFFE2E2F0),
+                  700: Color(0xFFE2E2F0),
+                  800: Color(0xFFE2E2F0),
+                  900: Color(0xFFE2E2F0),
+                }),
                 canvasColor: Colors.white12,
               ),
               home: const StriveHomePage(title: 'Strive Home'),
