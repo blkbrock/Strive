@@ -5,7 +5,7 @@ import 'package:lottie/lottie.dart';
 import 'package:strive/weight_page.dart';
 import 'package:strive/workout_page.dart';
 
-import 'messages.dart';
+import 'messages_page.dart';
 
 final databaseUserRef = FirebaseFirestore.instance.collection('Users');
 final databaseMsgRef = FirebaseDatabase.instance.ref();
