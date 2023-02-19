@@ -112,6 +112,7 @@ class _StriveHomePageState extends State<StriveHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text(widget.title),
       ),
