@@ -79,6 +79,18 @@ flutter:
     - assets/strive_logo_1152.png
     - assets/avocado_jump_rope.json
     - assets/astro_ride.json
+    - assets/message_icon_dark.png
+    - assets/message_icon_light.png
+    - assets/scale_icon_dark.png
+    - assets/scale_icon_light.png
+    - assets/apple_icon_dark.png
+    - assets/apple_icon_light.png
+    - assets/weights_icon_dark.png
+    - assets/weights_icon_light.png
+    - assets/star_icon_dark.png
+    - assets/star_icon_light.png
+    - assets/strive_background.png
+    - assets/strive_logo.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
