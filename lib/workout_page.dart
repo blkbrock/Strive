@@ -1,8 +1,15 @@
 import 'dart:core';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:strive/community_page.dart';
+import 'package:strive/food_page.dart';
+import 'package:strive/messages_page.dart';
+import 'package:strive/profile_page.dart';
+import 'package:strive/strive_colors.dart';
+import 'package:strive/weight_page.dart';
 
 String userName = '';
+
 class WorkoutPage extends StatefulWidget {
   WorkoutPage(String id, {super.key}) {
     userName = id;
@@ -14,10 +21,12 @@ class WorkoutPage extends StatefulWidget {
 class _WorkoutPageState extends State<WorkoutPage> {
   final databaseRef = FirebaseFirestore.instance.collection('Users');
   late Stream<QuerySnapshot> _stream;
-  String date='',exercise='',duration='';
+  String date = '', exercise = '', duration = '';
 
-  void uploadEntry(String newDate, String newExercise, String newDuration) async {
-    databaseRef.doc(userName).collection('Workouts').add({'Date': newDate, 'Exercise': newExercise, 'Duration': newDuration});
+  void uploadEntry(
+      String newDate, String newExercise, String newDuration) async {
+    databaseRef.doc(userName).collection('Workouts').add(
+        {'Date': newDate, 'Exercise': newExercise, 'Duration': newDuration});
   }
 
   void _showAddDialog() {
@@ -61,7 +70,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
             MaterialButton(
               child: const Text('Submit'),
               onPressed: () {
-                if (date!=''&&exercise!=''&&duration!='') {
+                if (date != '' && exercise != '' && duration != '') {
                   setState(() {
                     uploadEntry(date, exercise, duration);
                   });
@@ -85,31 +94,140 @@ class _WorkoutPageState extends State<WorkoutPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Workouts Page"),
+        toolbarHeight: 100,
+        flexibleSpace: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            IconButton(
+              icon: Image.asset("assets/strive_logo.png"),
+              iconSize: 140,
+              onPressed: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (BuildContext context) {
+                  return CommunityPage(userName);
+                }));
+              },
+            ),
+          ],
+        ),
       ),
-      body: StreamBuilder(
-        stream: _stream,
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          }
-          switch (snapshot.connectionState) {
-            case ConnectionState.waiting:
-              return const Center(child: CircularProgressIndicator());
-            default:
-              return ListView(
-                children: List<Widget>.from(snapshot.data?.docs.map((DocumentSnapshot document) {
-                  return ListTile(
-                    title: Text(document.get('Date').toString()),
-                    subtitle: Text(document.get('Exercise').toString()+document.get('Duration').toString()),
-                  );
-                })?? []),
-              );
-          }
-        },
-      ),
-      floatingActionButton: FloatingActionButton(onPressed: _showAddDialog,
-        child: const Icon(Icons.add),
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/strive_background.png"),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Column(
+          children: [
+            Flexible(
+              flex: 9,
+              fit: FlexFit.tight,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  const Spacer(flex: 1),
+                  Text(userName,
+                      style: const TextStyle(
+                          color: Colors.deepPurpleAccent, fontSize: 28)),
+                  const Spacer(flex: 1),
+                  StreamBuilder(
+                    stream: _stream,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      }
+                      switch (snapshot.connectionState) {
+                        case ConnectionState.waiting:
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        default:
+                          return ListView(
+                            children: List<Widget>.from(snapshot.data?.docs
+                                    .map((DocumentSnapshot document) {
+                                  return ListTile(
+                                    title:
+                                        Text(document.get('Date').toString()),
+                                    subtitle: Text(document
+                                            .get('Exercise')
+                                            .toString() +
+                                        document.get('Duration').toString()),
+                                  );
+                                }) ??
+                                []),
+                          );
+                      }
+                    },
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      _showAddDialog();
+                    },
+                    child: const Text('Add Workout Data'),
+                  ),
+                ],
+              ),
+            ),
+            Flexible(
+              flex: 1,
+              fit: FlexFit.tight,
+              child: Container(
+                decoration: const BoxDecoration(color: strive_lavender),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      icon: Image.asset("assets/star_icon_dark.png"),
+                      onPressed: () {
+                        Navigator.of(context).push(
+                            MaterialPageRoute(builder: (BuildContext context) {
+                          return ProfilePage(userName);
+                        }));
+                      },
+                    ),
+                    const Spacer(flex: 1),
+                    IconButton(
+                      icon: Image.asset("assets/apple_icon_dark.png"),
+                      onPressed: () {
+                        Navigator.of(context).push(
+                            MaterialPageRoute(builder: (BuildContext context) {
+                          return FoodPage(userName);
+                        }));
+                      },
+                    ),
+                    const Spacer(flex: 1),
+                    IconButton(
+                      icon: Image.asset("assets/weights_icon_light.png"),
+                      onPressed: () {},
+                    ),
+                    const Spacer(flex: 1),
+                    IconButton(
+                      icon: Image.asset("assets/scale_icon_dark.png"),
+                      onPressed: () {
+                        Navigator.of(context).push(
+                            MaterialPageRoute(builder: (BuildContext context) {
+                          return WeightPage(userName);
+                        }));
+                      },
+                    ),
+                    const Spacer(flex: 1),
+                    IconButton(
+                      icon: Image.asset("assets/message_icon_dark.png"),
+                      onPressed: () {
+                        Navigator.of(context).push(
+                            MaterialPageRoute(builder: (BuildContext context) {
+                          return MessagePage(userName);
+                        }));
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
