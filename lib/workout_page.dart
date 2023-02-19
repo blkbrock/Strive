@@ -3,15 +3,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 String userName = '';
-class WorkoutDataPage extends StatefulWidget {
-  WorkoutDataPage(String id, {super.key}) {
+class WorkoutPage extends StatefulWidget {
+  WorkoutPage(String id, {super.key}) {
     userName = id;
   }
   @override
-  State<WorkoutDataPage> createState() => _WorkoutDataPageState();
+  State<WorkoutPage> createState() => _WorkoutPageState();
 }
 
-class _WorkoutDataPageState extends State<WorkoutDataPage> {
+class _WorkoutPageState extends State<WorkoutPage> {
   final databaseRef = FirebaseFirestore.instance.collection('Users');
   late Stream<QuerySnapshot> _stream;
   String date='',exercise='',duration='';

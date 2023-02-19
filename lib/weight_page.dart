@@ -5,16 +5,16 @@ import 'package:strive/add_weight_page.dart';
 
 String userName = '';
 
-class WeightDataPage extends StatefulWidget {
-  WeightDataPage(String id, {Key? key}) : super(key: key) {
+class WeightPage extends StatefulWidget {
+  WeightPage(String id, {Key? key}) : super(key: key) {
     userName = id;
   }
 
   @override
-  State<WeightDataPage> createState() => _WeightDataPageState();
+  State<WeightPage> createState() => _WeightPageState();
 }
 
-class _WeightDataPageState extends State<WeightDataPage> {
+class _WeightPageState extends State<WeightPage> {
   final databaseWeightRef = FirebaseFirestore.instance.collection('Users');
   late Stream<QuerySnapshot> _stream;
 
