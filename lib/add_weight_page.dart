@@ -157,6 +157,7 @@ class _AddWeightPageState extends State<AddWeightPage> {
           MaterialButton(
             child: const Text('Submit', style: TextStyle(color: Colors.deepPurple)),
             onPressed: () {
+              _date = DateFormat.yMMMd().format(_selectedDate);
               if (_date != '' && _weight != '') {
                 setState(() {
                   uploadEntry(_date, _weight, _bodyFat);
