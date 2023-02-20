@@ -28,7 +28,7 @@ class _ChatBarState extends State<ChatBar> {
 
   Future sendMessage() async {
     if (textController.text.isNotEmpty) {
-      if (textController.text.length < 40) {
+      if (textController.text.length < 50) {
         try {
           return chatsRef.doc().set(
             {
@@ -51,7 +51,7 @@ class _ChatBarState extends State<ChatBar> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Must be 40 characters or less'),
+            content: Text('Must be 50 characters or less'),
           ),
         );
       }
@@ -72,8 +72,8 @@ class _ChatBarState extends State<ChatBar> {
         color: Color(0xff161616),
         boxShadow: [boxShadow],
       ),
-      child: Align(
-        alignment: Alignment.center,
+      child: Flexible(
+        flex: 1,
         child: Row(
           mainAxisSize: MainAxisSize.max,
           children: [

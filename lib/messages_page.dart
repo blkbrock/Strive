@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:strive/chat_bar.dart';
 import 'package:strive/community_page.dart';
 import 'package:strive/food_page.dart';
 import 'package:strive/profile_page.dart';
 import 'package:strive/strive_styles.dart';
 import 'package:strive/weight_page.dart';
 import 'package:strive/workout_page.dart';
-import 'package:strive/chat_bar.dart';
 import 'loading.dart';
 
 final firebaseMsgRef = FirebaseFirestore.instance.collection('GlobalMessages');
@@ -75,8 +75,8 @@ class _MessagesPage extends State<MessagePage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
-                  Flexible(flex: 1, fit: FlexFit.tight, child: Messages()),
-                  Flexible(flex: 1, fit: FlexFit.loose, child: ChatBar(userName))
+                  Messages(),
+                  ChatBar(userName),
                 ],
               ),
             ),
