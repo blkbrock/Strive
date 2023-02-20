@@ -123,7 +123,7 @@ class _WeightPageState extends State<WeightPage> {
                         return AddWeightPage(userName);
                       }));
                     },
-                    child: const Text('Add Workout Data'),
+                    child: const Text('Add Weight Data'),
                   ),
                 ],
               ),
