@@ -144,19 +144,23 @@ class _WorkoutPageState extends State<WorkoutPage> {
                           return const Center(
                               child: CircularProgressIndicator());
                         default:
-                          return ListView(
-                            children: List<Widget>.from(snapshot.data?.docs
-                                    .map((DocumentSnapshot document) {
-                                  return ListTile(
-                                    title:
-                                        Text(document.get('Date').toString()),
-                                    subtitle: Text(document
-                                            .get('Exercise')
-                                            .toString() +
-                                        document.get('Duration').toString()),
-                                  );
-                                }) ??
-                                []),
+                          return SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height / 3,
+                            child: ListView(
+                              children: List<Widget>.from(snapshot.data?.docs
+                                      .map((DocumentSnapshot document) {
+                                    return ListTile(
+                                      title:
+                                          Text(document.get('Date').toString()),
+                                      subtitle: Text(document
+                                              .get('Exercise')
+                                              .toString() +
+                                          document.get('Duration').toString()),
+                                    );
+                                  }) ??
+                                  []),
+                            ),
                           );
                       }
                     },
