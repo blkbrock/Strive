@@ -2,9 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:strive/add_weight_page.dart';
 import 'package:strive/community_page.dart';
-import 'package:strive/strive_colors.dart';
+import 'package:strive/strive_styles.dart';
 import 'package:strive/weight_page.dart';
 import 'package:strive/workout_page.dart';
 

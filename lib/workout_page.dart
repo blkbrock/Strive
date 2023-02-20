@@ -5,7 +5,7 @@ import 'package:strive/community_page.dart';
 import 'package:strive/food_page.dart';
 import 'package:strive/messages_page.dart';
 import 'package:strive/profile_page.dart';
-import 'package:strive/strive_colors.dart';
+import 'package:strive/strive_styles.dart';
 import 'package:strive/weight_page.dart';
 
 String userName = '';

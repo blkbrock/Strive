@@ -4,7 +4,7 @@ import 'package:strive/profile_page.dart';
 import 'package:strive/weight_page.dart';
 import 'package:strive/workout_page.dart';
 import 'package:strive/messages_page.dart';
-import 'package:strive/strive_colors.dart';
+import 'package:strive/strive_styles.dart';
 import 'package:strive/community_page.dart';
 
 final databaseUserRef = FirebaseFirestore.instance.collection('Users');

@@ -6,7 +6,7 @@ import 'package:strive/community_page.dart';
 import 'package:strive/food_page.dart';
 import 'package:strive/messages_page.dart';
 import 'package:strive/profile_page.dart';
-import 'package:strive/strive_colors.dart';
+import 'package:strive/strive_styles.dart';
 import 'package:strive/workout_page.dart';
 
 String userName = '';
@@ -99,11 +99,13 @@ class _WeightPageState extends State<WeightPage> {
                                       .map((DocumentSnapshot document) {
                                     return ListTile(
                                       title:
-                                          Text(document.get('Date').toString()),
+                                          Text(document.get('Date').toString(),style: const TextStyle(
+                                            color: Colors.deepPurple,
+                                            fontSize: 18),),
                                       subtitle: Text(
                                         "${document.get('Weight')}lbs;   ${document.get('BodyFat')}%",
                                         style: const TextStyle(
-                                            color: Colors.deepPurple,
+                                            color: Color(0xFFE2E2F0),
                                             fontSize: 18),
                                       ),
                                     );
