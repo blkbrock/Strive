@@ -8,7 +8,6 @@ import 'package:strive/strive_colors.dart';
 import 'package:strive/weight_page.dart';
 import 'package:strive/workout_page.dart';
 
-
 final databaseMsgRef = FirebaseDatabase.instance.ref();
 String userName = '';
 
@@ -39,7 +38,7 @@ class MessagesQueue<T> {
 class _MessagesPage extends State<MessagePage> {
   MessagesQueue messagesQueue = MessagesQueue(20);
   List<Widget> messages = [];
-  String sendMsg='';
+  String sendMsg = '';
 
   void addMessage(String sender, String message) {
     setState(() {
@@ -57,7 +56,6 @@ class _MessagesPage extends State<MessagePage> {
     databaseMsgRef.push().set({'Sender': name, 'message': message});
   }
 
-
   @override
   initState() {
     super.initState();
@@ -68,7 +66,7 @@ class _MessagesPage extends State<MessagePage> {
     });
   }
 
- @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -105,43 +103,38 @@ class _MessagesPage extends State<MessagePage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
-                  const Spacer(flex: 1),
                   Text(userName,
                       style: const TextStyle(
-                          color: Colors.deepPurpleAccent, fontSize: 28)),
+                          color: Colors.deepPurpleAccent, fontSize: 14)),
                   const Spacer(flex: 1),
-                  Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: messagesQueue._queue.reversed.toList(),
-                  ),
-                ),
-              ),
-              Container(
-                height: 120.0,
-                alignment: Alignment.center,
-                child: TextField(
-                  onSubmitted: (String value) async {
-                    sendMessage(value);
-                    setState(() {});
-                  },
-                  decoration: const InputDecoration(
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.deepPurpleAccent)
+                  Flexible(
+                    flex: 5,
+                    fit: FlexFit.tight,
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height / 2,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: messagesQueue._queue.reversed.toList(),
+                        ),
                       ),
-                      labelText: 'Strive Messaging',
-                      hintText: 'Type a message!'
+                    ),
                   ),
-                ),
-              ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                          MaterialPageRoute(builder: (BuildContext context) {
-                        return AddWeightPage(userName);
-                      }));
-                    },
-                    child: const Text('Add Workout Data'),
+                  Flexible(
+                    flex: 1,
+                    fit: FlexFit.tight,
+                    child: TextField(
+                      onSubmitted: (String value) async {
+                        sendMessage(value);
+                        setState(() {});
+                      },
+                      decoration: const InputDecoration(
+                          border: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.deepPurpleAccent)),
+                          labelText: 'Strive Messaging',
+                          hintText: 'Type a message!'),
+                    ),
                   ),
                 ],
               ),
@@ -181,15 +174,17 @@ class _MessagesPage extends State<MessagePage> {
                             MaterialPageRoute(builder: (BuildContext context) {
                           return WorkoutPage(userName);
                         }));
-                        },
+                      },
                     ),
                     const Spacer(flex: 1),
                     IconButton(
                       icon: Image.asset("assets/scale_icon_dark.png"),
-                      onPressed: () {Navigator.of(context).push(
+                      onPressed: () {
+                        Navigator.of(context).push(
                             MaterialPageRoute(builder: (BuildContext context) {
                           return WeightPage(userName);
-                        }));},
+                        }));
+                      },
                     ),
                     const Spacer(flex: 1),
                     IconButton(
