@@ -91,21 +91,25 @@ class _WeightPageState extends State<WeightPage> {
                           return const Center(
                               child: CircularProgressIndicator());
                         default:
-                          return ListView(
-                            children: List<Widget>.from(snapshot.data?.docs
-                                    .map((DocumentSnapshot document) {
-                                  return ListTile(
-                                    title:
-                                        Text(document.get('Date').toString()),
-                                    subtitle: Text(
-                                      "${document.get('Weight')}lbs;   ${document.get('BodyFat')}%",
-                                      style: const TextStyle(
-                                          color: Colors.deepPurple,
-                                          fontSize: 18),
-                                    ),
-                                  );
-                                }) ??
-                                []),
+                          return SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height / 3,
+                            child: ListView(
+                              children: List<Widget>.from(snapshot.data?.docs
+                                      .map((DocumentSnapshot document) {
+                                    return ListTile(
+                                      title:
+                                          Text(document.get('Date').toString()),
+                                      subtitle: Text(
+                                        "${document.get('Weight')}lbs;   ${document.get('BodyFat')}%",
+                                        style: const TextStyle(
+                                            color: Colors.deepPurple,
+                                            fontSize: 18),
+                                      ),
+                                    );
+                                  }) ??
+                                  []),
+                            ),
                           );
                       }
                     },
@@ -157,7 +161,7 @@ class _WeightPageState extends State<WeightPage> {
                             MaterialPageRoute(builder: (BuildContext context) {
                           return WorkoutPage(userName);
                         }));
-                        },
+                      },
                     ),
                     const Spacer(flex: 1),
                     IconButton(
