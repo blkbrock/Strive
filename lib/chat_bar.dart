@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 String _userName = '';
 
 class ChatBar extends StatefulWidget {
-  const ChatBar(String id, {super.key}) {
+  ChatBar(String id, {super.key}) {
     _userName = id;
   }
 
