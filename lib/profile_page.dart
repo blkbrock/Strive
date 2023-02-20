@@ -70,63 +70,93 @@ class _ProfilePage extends State<ProfilePage> {
             fit: BoxFit.cover,
           ),
         ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Flexible(
-                flex: 11,
-                fit: FlexFit.tight,
-                  child: Column(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Flexible(
+              flex: 1,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
                 children: [
                   const Spacer(flex: 1),
-                  Text(userName,
-                      style: const TextStyle(
-                          color: Colors.deepPurpleAccent, fontSize: 28)),
-                  Lottie.asset(
-                    'assets/astro_ride.json',
-                    width: MediaQuery.of(context).size.width * 0.5,
-                    height: MediaQuery.of(context).size.width * 0.5,
-                    fit: BoxFit.fill,
+                  Expanded(
+                    flex: 9,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(userName,
+                            style: const TextStyle(
+                                color: Colors.deepPurpleAccent, fontSize: 16)),
+                      ],
+                    ),
                   ),
-                  const Spacer(flex: 2),
-                  ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => WeightPage(userName),
-                          ),
-                        );
-                      },
-                      child: const Text('Weight History')),
-                  const Spacer(flex: 1),
-                  ElevatedButton(
+                  Flexible(
+                    flex: 1,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        IconButton(
+                          onPressed: () {},
+                          icon: const Icon(Icons.settings, color: strive_lavender),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Flexible(
+                flex: 9,
+                fit: FlexFit.tight,
+                child: Column(
+                  children: [
+                    Lottie.asset(
+                      'assets/astro_ride.json',
+                      width: MediaQuery.of(context).size.width * 0.3,
+                      height: MediaQuery.of(context).size.width * 0.3,
+                      fit: BoxFit.fill,
+                    ),
+                    const Spacer(flex: 2),
+                    ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => WeightPage(userName),
+                            ),
+                          );
+                        },
+                        child: const Text('Weight History')),
+                    const Spacer(flex: 1),
+                    ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (BuildContext context) {
+                            return WorkoutPage(userName);
+                          }));
+                        },
+                        child: const Text('Workout History')),
+                    const Spacer(flex: 1),
+                    Text(
+                      msg,
+                      style: const TextStyle(
+                          color: Colors.deepPurpleAccent, fontSize: 16),
+                    ),
+                    ElevatedButton(
                       onPressed: () {
                         Navigator.of(context).push(
                             MaterialPageRoute(builder: (BuildContext context) {
-                          return WorkoutPage(userName);
+                          return MessagePage(userName);
                         }));
                       },
-                      child: const Text('Workout History')),
-                  const Spacer(flex: 1),
-                  Text(
-                    msg,
-                    style: const TextStyle(
-                        color: Colors.deepPurpleAccent, fontSize: 16),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                          MaterialPageRoute(builder: (BuildContext context) {
-                        return MessagePage(userName);
-                      }));
-                    },
-                    child: const Text("Messages ->"),
-                  ),
-                  const Spacer(flex: 1),
-                ],
-              )),
-              Flexible(
+                      child: const Text("Messages ->"),
+                    ),
+                    const Spacer(flex: 1),
+                  ],
+                )),
+            Flexible(
               flex: 1,
               fit: FlexFit.tight,
               child: Container(
@@ -182,8 +212,7 @@ class _ProfilePage extends State<ProfilePage> {
                 ),
               ),
             ),
-            ],
-          ),
+          ],
         ),
       ),
     );
