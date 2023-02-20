@@ -1,14 +1,15 @@
-import 'package:firebase_database/firebase_database.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:strive/add_weight_page.dart';
 import 'package:strive/community_page.dart';
 import 'package:strive/food_page.dart';
 import 'package:strive/profile_page.dart';
-import 'package:strive/strive_colors.dart';
+import 'package:strive/strive_styles.dart';
 import 'package:strive/weight_page.dart';
 import 'package:strive/workout_page.dart';
+import 'package:strive/chat_bar.dart';
+import 'loading.dart';
 
-final databaseMsgRef = FirebaseDatabase.instance.ref();
+final firebaseMsgRef = FirebaseFirestore.instance.collection('GlobalMessages');
 String userName = '';
 
 class MessagePage extends StatefulWidget {
@@ -36,36 +37,6 @@ class MessagesQueue<T> {
 }
 
 class _MessagesPage extends State<MessagePage> {
-  MessagesQueue messagesQueue = MessagesQueue(20);
-  List<Widget> messages = [];
-  String sendMsg = '';
-
-  void addMessage(String sender, String message) {
-    setState(() {
-      final String formattedMessage = "$sender: $message";
-      Text messageWidget = Text(
-        formattedMessage,
-        style: const TextStyle(fontSize: 18, color: Colors.white70),
-      );
-      messagesQueue.add(messageWidget);
-    });
-  }
-
-  void sendMessage(String message) async {
-    String name = userName;
-    databaseMsgRef.push().set({'Sender': name, 'message': message});
-  }
-
-  @override
-  initState() {
-    super.initState();
-    databaseMsgRef.onChildAdded.listen((DatabaseEvent event) {
-      final String sender = event.snapshot.children.first.value.toString();
-      final String message = event.snapshot.children.last.value.toString();
-      addMessage(sender, message);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,50 +67,21 @@ class _MessagesPage extends State<MessagePage> {
           ),
         ),
         child: Column(
+          mainAxisSize: MainAxisSize.max,
           children: [
             Flexible(
-              flex: 9,
+              flex: 11,
               fit: FlexFit.tight,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
-                  Text(userName,
-                      style: const TextStyle(
-                          color: Colors.deepPurpleAccent, fontSize: 14)),
-                  const Spacer(flex: 1),
-                  Flexible(
-                    flex: 5,
-                    fit: FlexFit.tight,
-                    child: SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height / 2,
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: messagesQueue._queue.reversed.toList(),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Flexible(
-                    flex: 1,
-                    fit: FlexFit.tight,
-                    child: TextField(
-                      onSubmitted: (String value) async {
-                        sendMessage(value);
-                        setState(() {});
-                      },
-                      decoration: const InputDecoration(
-                          border: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.deepPurpleAccent)),
-                          labelText: 'Strive Messaging',
-                          hintText: 'Type a message!'),
-                    ),
-                  ),
+                  Flexible(flex: 1, fit: FlexFit.tight, child: Messages()),
+                  Flexible(flex: 1, fit: FlexFit.loose, child: ChatBar(userName))
                 ],
               ),
             ),
             Flexible(
+              // Bottom navigation bar
               flex: 1,
               fit: FlexFit.tight,
               child: Container(
@@ -197,6 +139,174 @@ class _MessagesPage extends State<MessagePage> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class Messages extends StatelessWidget {
+  final Stream<QuerySnapshot> _chatsStream = FirebaseFirestore.instance
+      .collection('GlobalMessages')
+      .orderBy('createdAt', descending: false)
+      .limit(15)
+      .snapshots();
+
+  Messages({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: _chatsStream,
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return Center(child: Text('$snapshot.error'));
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Loading();
+        }
+
+        return Flexible(
+          fit: FlexFit.tight,
+          // Flexible prevents overflow error when keyboard is opened
+          child: GestureDetector(
+            // Close the keyboard if anything else is tapped
+            onTap: () {
+              FocusScopeNode currentFocus = FocusScope.of(context);
+              if (!currentFocus.hasPrimaryFocus) {
+                currentFocus.unfocus();
+              }
+            },
+            child: ListView(
+              scrollDirection: Axis.vertical,
+              children: List<Widget>.from(snapshot.data!.docs.map(
+                (DocumentSnapshot doc) {
+                  // Doc id
+                  String id = doc.id;
+                  // Chat data
+                  Map<String, dynamic> data =
+                      doc.data()! as Map<String, dynamic>;
+
+                  // Chats sent by the current user
+                  if (userName == data['owner']) {
+                    return SentMessage(data: data);
+                  } else {
+                    // Chats sent by everyone else
+                    return ReceivedMessage(data: data);
+                  }
+                },
+              )),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class SentMessage extends StatelessWidget {
+  const SentMessage({
+    Key? key,
+    required this.data,
+  }) : super(key: key);
+
+  final Map<String, dynamic> data;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(4.0),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          const SizedBox(), // Dynamic width spacer
+          Container(
+            constraints: chatConstraints,
+            padding: const EdgeInsets.only(
+              left: 10.0,
+              top: 5.0,
+              bottom: 5.0,
+              right: 5.0,
+            ),
+            decoration: const BoxDecoration(
+              gradient: sent,
+              borderRadius: round,
+            ),
+            child: GestureDetector(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Flexible(
+                    child: Text(
+                      data['text'],
+                      textAlign: TextAlign.right,
+                      style: chatText,
+                    ),
+                  ),
+                  const SizedBox(width: 10.0),
+                  const CircleAvatar(
+                    radius: 20,
+                    backgroundImage: AssetImage('assets/strive_logo.png'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ReceivedMessage extends StatelessWidget {
+  const ReceivedMessage({
+    Key? key,
+    required this.data,
+  }) : super(key: key);
+
+  final Map<String, dynamic> data;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(4.0),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Container(
+            constraints: chatConstraints,
+            padding: const EdgeInsets.only(
+              left: 5.0,
+              top: 5.0,
+              bottom: 5.0,
+              right: 10.0,
+            ),
+            decoration: const BoxDecoration(
+              gradient: received,
+              borderRadius: round,
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const CircleAvatar(
+                  radius: 20,
+                  backgroundImage: AssetImage('assets/strive_logo.png'),
+                ),
+                const SizedBox(width: 10.0),
+                Flexible(
+                  child: Text(
+                    data['text'],
+                    textAlign: TextAlign.left,
+                    style: chatText,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(), // Dynamic width spacer
+        ],
       ),
     );
   }
