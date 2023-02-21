@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:strive/community_page.dart';
 import 'package:strive/strive_styles.dart';
 import 'package:strive/weight_page.dart';
 import 'package:strive/workout_page.dart';
+import 'package:strive/user_settings_page.dart';
 
 import 'food_page.dart';
 import 'messages_page.dart';
@@ -74,33 +74,60 @@ class _ProfilePage extends State<ProfilePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Flexible(
-              flex: 1,
+              flex: 3,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   const Spacer(flex: 1),
                   Expanded(
-                    flex: 9,
+                    flex: 6,
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(userName,
+                        const Image(
+                          image: AssetImage("assets/star_icon_light.png"),
+                          height: 50,
+                          width: 50,
+                        ),
+                        OutlinedButton(
+                          onPressed: () {},
+                          style: ButtonStyle(
+                            fixedSize: MaterialStateProperty.all<Size>(
+                                const Size(80, 40)),
+                            shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    side: const BorderSide(
+                                        color: strive_cyan,
+                                        width: 15.0,
+                                        style: BorderStyle.solid))),
+                          ),
+                          child: Text(
+                            userName,
                             style: const TextStyle(
-                                color: Colors.deepPurpleAccent, fontSize: 16)),
+                                color: strive_lavender, fontSize: 16),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
                       ],
                     ),
                   ),
                   Flexible(
                     flex: 1,
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.settings, color: strive_lavender),
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (BuildContext context) {
+                              return UserSettingsPage(userName);
+                            }));
+                          },
+                          icon: const Icon(Icons.settings,
+                              color: strive_lavender),
                         ),
                       ],
                     ),
@@ -109,51 +136,59 @@ class _ProfilePage extends State<ProfilePage> {
               ),
             ),
             Flexible(
-                flex: 9,
+                flex: 12,
                 fit: FlexFit.tight,
                 child: Column(
                   children: [
-                    Lottie.asset(
-                      'assets/astro_ride.json',
-                      width: MediaQuery.of(context).size.width * 0.3,
-                      height: MediaQuery.of(context).size.width * 0.3,
-                      fit: BoxFit.fill,
+                    Flexible(
+                      flex: 8,
+                      child: SingleChildScrollView(
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height * 2,
+                          child: Column(
+                            children: [
+                              ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            WeightPage(userName),
+                                      ),
+                                    );
+                                  },
+                                  child: const Text('Weight History')),
+                              const Spacer(flex: 1),
+                              ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (BuildContext context) {
+                                      return WorkoutPage(userName);
+                                    }));
+                                  },
+                                  child: const Text('Workout History')),
+                              const Spacer(flex: 1),
+                              Text(
+                                msg,
+                                style: const TextStyle(
+                                    color: Colors.deepPurpleAccent,
+                                    fontSize: 16),
+                              ),
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (BuildContext context) {
+                                    return MessagePage(userName);
+                                  }));
+                                },
+                                child: const Text("Messages ->"),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
-                    const Spacer(flex: 2),
-                    ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => WeightPage(userName),
-                            ),
-                          );
-                        },
-                        child: const Text('Weight History')),
-                    const Spacer(flex: 1),
-                    ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (BuildContext context) {
-                            return WorkoutPage(userName);
-                          }));
-                        },
-                        child: const Text('Workout History')),
-                    const Spacer(flex: 1),
-                    Text(
-                      msg,
-                      style: const TextStyle(
-                          color: Colors.deepPurpleAccent, fontSize: 16),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).push(
-                            MaterialPageRoute(builder: (BuildContext context) {
-                          return MessagePage(userName);
-                        }));
-                      },
-                      child: const Text("Messages ->"),
-                    ),
-                    const Spacer(flex: 1),
                   ],
                 )),
             Flexible(

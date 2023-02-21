@@ -24,7 +24,6 @@ class _AddWeightPageState extends State<AddWeightPage> {
   late DateTime _selectedDate;
   late DateTime _targetDateTime;
   late String _selectedDateString;
-  late String _currentDateString;
   late String _targetDateString;
 
   String _date = '', _weight = '', _bodyFat = '';
