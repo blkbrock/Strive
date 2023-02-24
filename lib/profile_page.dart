@@ -145,45 +145,157 @@ class _ProfilePage extends State<ProfilePage> {
                       child: SingleChildScrollView(
                         child: SizedBox(
                           width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height * 2,
+                          height: MediaQuery.of(context).size.height * 1,
                           child: Column(
                             children: [
-                              ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            WeightPage(userName),
-                                      ),
-                                    );
-                                  },
-                                  child: const Text('Weight History')),
-                              const Spacer(flex: 1),
-                              ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (BuildContext context) {
-                                      return WorkoutPage(userName);
-                                    }));
-                                  },
-                                  child: const Text('Workout History')),
-                              const Spacer(flex: 1),
-                              Text(
-                                msg,
-                                style: const TextStyle(
-                                    color: Colors.deepPurpleAccent,
-                                    fontSize: 16),
+                              //Badges Row
+                              Flexible(
+                                flex: 4,
+                                child: Container(
+                                    color: strive_navy,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        Row(
+                                          children: const [
+                                            Spacer(flex: 1),
+                                            Text('Badges',
+                                                style: TextStyle(
+                                                    color: strive_lavender,
+                                                    fontSize: 18,
+                                                    decoration: TextDecoration
+                                                        .underline)),
+                                            Spacer(flex: 5),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: const [
+                                            Spacer(flex: 1),
+                                            CircleAvatar(
+                                              radius: 20,
+                                              backgroundColor: strive_lavender,
+                                              backgroundImage: AssetImage(
+                                                  'assets/star_icon_light.png'),
+                                            ),
+                                            Spacer(flex: 1),
+                                            CircleAvatar(
+                                              radius: 20,
+                                              backgroundColor: strive_lavender,
+                                              backgroundImage: AssetImage(
+                                                  'assets/star_icon_light.png'),
+                                            ),
+                                            Spacer(flex: 1),
+                                            CircleAvatar(
+                                              radius: 20,
+                                              backgroundColor: strive_lavender,
+                                              backgroundImage: AssetImage(
+                                                  'assets/star_icon_light.png'),
+                                            ),
+                                            Spacer(flex: 1),
+                                            CircleAvatar(
+                                              radius: 20,
+                                              backgroundColor: strive_lavender,
+                                              backgroundImage: AssetImage(
+                                                  'assets/star_icon_light.png'),
+                                            ),
+                                            Spacer(flex: 1),
+                                            CircleAvatar(
+                                              radius: 20,
+                                              backgroundColor: strive_lavender,
+                                              backgroundImage: AssetImage(
+                                                  'assets/star_icon_light.png'),
+                                            ),
+                                            Spacer(flex: 1),
+                                            CircleAvatar(
+                                              radius: 20,
+                                              backgroundColor: strive_lavender,
+                                              backgroundImage: AssetImage(
+                                                  'assets/star_icon_light.png'),
+                                            ),
+                                            Spacer(flex: 1),
+                                          ],
+                                        ),
+                                      ],
+                                    )),
                               ),
-                              ElevatedButton(
-                                onPressed: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (BuildContext context) {
-                                    return MessagePage(userName);
-                                  }));
-                                },
-                                child: const Text("Messages ->"),
+                              //Spacer
+                              const Spacer(flex: 1),
+                              //Workout Row
+                              Flexible(
+                                flex: 6,
+                                child: Container(
+                                    color: strive_navy,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        Row(
+                                          children: const [
+                                            Spacer(flex: 1),
+                                            Text('Workouts',
+                                                style: TextStyle(
+                                                    color: strive_lavender,
+                                                    fontSize: 18,
+                                                    decoration: TextDecoration
+                                                        .underline)),
+                                            Spacer(flex: 5),
+                                          ],
+                                        ),
+                                        ElevatedButton(
+                                            onPressed: () {
+                                              Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      WorkoutPage(userName),
+                                                ),
+                                              );
+                                            },
+                                            child:
+                                                const Text('Workout History')),
+                                      ],
+                                    )),
                               ),
+                              const Spacer(flex: 1),
+                              //Weight Row
+                              Flexible(
+                                flex: 8,
+                                child: Container(
+                                    color: strive_navy,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        Row(
+                                          children: const [
+                                            Spacer(flex: 1),
+                                            Text('Weight',
+                                                style: TextStyle(
+                                                    color: strive_lavender,
+                                                    fontSize: 18,
+                                                    decoration: TextDecoration
+                                                        .underline)),
+                                            Spacer(flex: 5),
+                                          ],
+                                        ),
+                                        ElevatedButton(
+                                            onPressed: () {
+                                              Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      WeightPage(userName),
+                                                ),
+                                              );
+                                            },
+                                            child:
+                                                const Text('Weight History')),
+                                      ],
+                                    )),
+                              ),
+                              //Spacer
+                              const Spacer(flex: 1),
                             ],
                           ),
                         ),
