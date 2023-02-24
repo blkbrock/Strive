@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:strive/community_page.dart';
+import 'package:strive/strive_styles.dart';
 
 final databaseUserRef = FirebaseFirestore.instance.collection('Users');
 String userName = '';
@@ -59,23 +60,27 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
             fit: BoxFit.cover,
           ),
         ),
-        child: Column(
-          children: [
-            Flexible(
-              flex: 9,
-              fit: FlexFit.tight,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  const Spacer(flex: 1),
-                  Text(userName,
-                      style: const TextStyle(
-                          color: Colors.deepPurpleAccent, fontSize: 28)),
-                  const Spacer(flex: 1),
+        child: Expanded(
+          flex: 9,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Flexible(
+                flex: 1,
+                child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                children: const [
+                  Text('Settings', style: TextStyle(color: strive_lavender, fontSize: 18),),
                 ],
-              ),
-            ),
-          ],
+              )),
+              const Spacer(flex: 1),
+              Text(userName,
+                  style: const TextStyle(
+                      color: Colors.deepPurpleAccent, fontSize: 28)),
+              const Spacer(flex: 1),
+            ],
+          ),
         ),
       ),
     );
