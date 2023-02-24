@@ -136,7 +136,7 @@ class _ProfilePage extends State<ProfilePage> {
               ),
             ),
             Flexible(
-                flex: 12,
+                flex: 8,
                 fit: FlexFit.tight,
                 child: Column(
                   children: [

@@ -67,7 +67,7 @@ class _FoodPage extends State<FoodPage> {
         child: Column(
           children: [
             Flexible(
-              flex: 9,
+              flex: 11,
               fit: FlexFit.tight,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
