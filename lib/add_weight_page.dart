@@ -6,6 +6,8 @@ import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart'
 import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_calendar_carousel/classes/event_list.dart';
 import 'package:intl/intl.dart' show DateFormat;
+import 'package:numberpicker/numberpicker.dart';
+import 'package:strive/strive_styles.dart';
 
 String userName = '';
 
@@ -27,10 +29,10 @@ class _AddWeightPageState extends State<AddWeightPage> {
   late String _targetDateString;
 
   String _date = '', _weight = '', _bodyFat = '';
+  int weightScroll = 0, bodyFatScroll = 0;
 
   final EventList<Event> _markedDateMap = EventList<Event>(
-    events: {
-    },
+    events: {},
   );
 
   static final Widget _eventIcon = Container(
@@ -43,6 +45,18 @@ class _AddWeightPageState extends State<AddWeightPage> {
       color: Colors.blueAccent,
     ),
   );
+
+  Future<void> _getScrollValues() async {
+    await databaseWeightRef
+        .doc(userName)
+        .collection('Weight')
+        .get()
+        .then((value) {
+      weightScroll = int.parse(value.docs.first.get('Weight'));
+      bodyFatScroll = int.parse(value.docs.first.get('BodyFat'));
+    });
+    setState(() {});
+  }
 
   void uploadEntry(String newDate, String newWeight, String newBodyFat) async {
     databaseWeightRef
@@ -57,120 +71,152 @@ class _AddWeightPageState extends State<AddWeightPage> {
     _targetDateTime = _currentDate;
     _targetDateString = DateFormat.yMMM().format(_currentDate);
     _selectedDateString = DateFormat.MMMd().format(_currentDate);
+    _getScrollValues();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-        backgroundColor: const Color(0xFF222222),
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(title: const Text('Add Entry')),
-        body: Column(children: <Widget>[
-          CalendarCarousel<Event>(
-            onDayPressed: (date, events) {
-              setState(() {
-                _selectedDate = date;
-                _selectedDateString = DateFormat.MMMd().format(_selectedDate);
-                _date = DateFormat.yMMMd().format(_selectedDate);
-              });
-            },
-            onCalendarChanged: (DateTime date) {
-              setState(() {
-                _targetDateTime = date;
-                _targetDateString = DateFormat.yMMM().format(_targetDateTime);
-              });
-            },
-            weekdayTextStyle: const TextStyle(
-              color: Colors.deepPurpleAccent,
+        body: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/strive_background.png"),
+              fit: BoxFit.cover,
             ),
-            weekendTextStyle: const TextStyle(
-              color: Colors.deepPurpleAccent,
-            ),
-            thisMonthDayBorderColor: Colors.grey,
-            headerText: _targetDateString,
-            weekFormat: true,
-            showOnlyCurrentMonthDate: false,
-            markedDatesMap: _markedDateMap,
-            height: 180.0,
-            selectedDateTime: _selectedDate,
-            targetDateTime: _targetDateTime,
-            selectedDayBorderColor: Colors.deepPurpleAccent,
-            selectedDayButtonColor: Colors.white10,
-            showIconBehindDayText: true,
-//          daysHaveCircularBorder: false, /// null for not rendering any border, true for circular border, false for rectangular border
-            customGridViewPhysics: const NeverScrollableScrollPhysics(),
-            markedDateShowIcon: true,
-            markedDateIconMaxShown: 2,
-            selectedDayTextStyle: const TextStyle(
-              color: Colors.deepPurpleAccent,
-            ),
-            todayTextStyle: const TextStyle(
-              color: Colors.blueAccent,
-            ),
-            daysTextStyle: const TextStyle(
-              color: Colors.deepPurpleAccent,
-            ),
-            markedDateIconBuilder: (event) {
-              return event.icon ?? const Icon(Icons.help_outline);
-            },
-            minSelectedDate: _currentDate.subtract(const Duration(days: 360)),
-            maxSelectedDate: _currentDate.add(const Duration(days: 360)),
-            todayButtonColor: Colors.transparent,
-            todayBorderColor: Colors.white10,
           ),
-
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[Text(
-              _selectedDateString,
-              style: const TextStyle(
-                color: Colors.blueAccent,
-                fontWeight: FontWeight.bold,
-                fontSize: 24.0,
-              ),
-            ),
-            ],
-          ),
-          const SizedBox(height: 20.0),
-          TextFormField(
-            textAlign: TextAlign.center,
-            decoration: const InputDecoration(
-                label: Center(child: Text('Weight', style: TextStyle(color: Colors.blueAccent)),
-                )),
-            onChanged: (String? newWeight) {
-              _weight = newWeight!;
-            },
-          ),
-          const SizedBox(height: 20.0),
-          TextFormField(
-            textAlign: TextAlign.center,
-            decoration: const InputDecoration(
-                label: Center(child: Text('Body Fat %', style: TextStyle(color: Colors.blueAccent)),
-                )),
-            onChanged: (String? newBodyFat) {
-              _bodyFat = newBodyFat!;
-            },
-          ),
-          const SizedBox(height: 20.0),
-          MaterialButton(
-            child: const Text('Submit', style: TextStyle(color: Colors.deepPurple)),
-            onPressed: () {
-              _date = DateFormat.yMMMd().format(_selectedDate);
-              if (_date != '' && _weight != '') {
+          child: Column(children: <Widget>[
+            CalendarCarousel<Event>(
+              onDayPressed: (date, events) {
                 setState(() {
-                  uploadEntry(_date, _weight, _bodyFat);
+                  _selectedDate = date;
+                  _selectedDateString = DateFormat.MMMd().format(_selectedDate);
+                  _date = DateFormat.yMMMd().format(_selectedDate);
+                });
+              },
+              onCalendarChanged: (DateTime date) {
+                setState(() {
+                  _targetDateTime = date;
+                  _targetDateString = DateFormat.yMMM().format(_targetDateTime);
+                });
+              },
+              weekdayTextStyle: const TextStyle(
+                color: strive_purple,
+              ),
+              weekendTextStyle: const TextStyle(
+                color: strive_purple,
+              ),
+              thisMonthDayBorderColor: Colors.grey,
+              headerText: _targetDateString,
+              headerTextStyle: const TextStyle(color: strive_cyan),
+              weekFormat: true,
+              showOnlyCurrentMonthDate: false,
+              markedDatesMap: _markedDateMap,
+              height: 200.0,
+              selectedDateTime: _selectedDate,
+              targetDateTime: _targetDateTime,
+              selectedDayBorderColor: strive_purple,
+              selectedDayButtonColor: strive_purple,
+              showIconBehindDayText: true,
+              daysHaveCircularBorder: true,
+
+              /// null for not rendering any border, true for circular border, false for rectangular border
+              customGridViewPhysics: const AlwaysScrollableScrollPhysics(),
+              markedDateShowIcon: true,
+              markedDateIconMaxShown: 2,
+              selectedDayTextStyle:
+                  const TextStyle(color: strive_cyan, fontSize: 18.0),
+              todayTextStyle: const TextStyle(
+                color: strive_cyan,
+              ),
+              daysTextStyle: const TextStyle(
+                color: strive_purple,
+              ),
+              markedDateIconBuilder: (event) {
+                return event.icon ?? const Icon(Icons.help_outline);
+              },
+              minSelectedDate: _currentDate.subtract(const Duration(days: 360)),
+              maxSelectedDate: _currentDate.add(const Duration(days: 360)),
+              todayButtonColor: Colors.transparent,
+              todayBorderColor: Colors.white10,
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  _selectedDateString,
+                  style: const TextStyle(
+                    color: strive_cyan,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24.0,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20.0),
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              const Spacer(flex: 2),
+              const Expanded(
+                flex: 4,
+                child: Text('Weight',
+                    style: TextStyle(color: strive_cyan, fontSize: 20.0)),
+              ),
+              const Spacer(flex: 1),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.2,
+                child: NumberPicker(
+                  minValue: 0,
+                  maxValue: 300,
+                  value: weightScroll,
+                  onChanged: ((value) => setState(() => weightScroll = value)),
+                ),
+              ),
+              const Spacer(flex: 1),
+            ]),
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              const Spacer(flex: 2),
+              const Expanded(
+                flex: 4,
+                child: Text('BodyFat %',
+                    style: TextStyle(color: strive_cyan, fontSize: 20.0)),
+              ),
+              const Spacer(flex: 1),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.2,
+                child: NumberPicker(
+                  minValue: 0,
+                  maxValue: 300,
+                  value: bodyFatScroll,
+                  onChanged: ((value) => setState(() => bodyFatScroll = value)),
+                ),
+              ),
+              const Spacer(flex: 1),
+            ]),
+            const SizedBox(height: 20.0),
+            MaterialButton(
+              child: const Text('Submit',
+                  style: TextStyle(color: strive_purple, fontSize: 16.0)),
+              onPressed: () {
+                _date = DateFormat.yMMMd().format(_selectedDate);
+                setState(() {
+                  uploadEntry(
+                      _date, weightScroll.toString(), bodyFatScroll.toString());
                 });
                 Navigator.pop(context, 'Cancel');
-              }
-            },
-          ),
-          MaterialButton(
-            child: const Text('Cancel'),
-            onPressed: () {
-              Navigator.pop(context, 'Cancel');
-            },
-          )
-        ]));
+              },
+            ),
+            MaterialButton(
+              child: const Text(
+                'Cancel',
+                style: TextStyle(color: strive_navy, fontSize: 16.0),
+              ),
+              onPressed: () {
+                Navigator.pop(context, 'Cancel');
+              },
+            )
+          ]),
+        ));
   }
 }
