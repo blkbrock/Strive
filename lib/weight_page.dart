@@ -8,6 +8,8 @@ import 'package:strive/messages_page.dart';
 import 'package:strive/profile_page.dart';
 import 'package:strive/strive_styles.dart';
 import 'package:strive/workout_page.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 
 String userName = '';
 
@@ -23,6 +25,7 @@ class WeightPage extends StatefulWidget {
 class _WeightPageState extends State<WeightPage> {
   final databaseWeightRef = FirebaseFirestore.instance.collection('Users');
   late Stream<QuerySnapshot> _stream;
+  Map<String, QueryDocumentSnapshot> _weightData = {};
 
   void uploadEntry(String newDate, String newWeight, String newBodyFat) async {
     databaseWeightRef
@@ -31,9 +34,19 @@ class _WeightPageState extends State<WeightPage> {
         .add({'Date': newDate, 'Weight': newWeight, 'BodyFat': newBodyFat});
   }
 
+  Future<void> _getWeightData() async {
+    final QuerySnapshot weightData =
+        await databaseWeightRef.doc(userName).collection('Weight').get();
+    for (final QueryDocumentSnapshot weight in weightData.docs) {
+      _weightData[weight.get('Date')] = weight;
+    }
+    setState(() {});
+  }
+
   @override
   void initState() {
     _stream = databaseWeightRef.doc(userName).collection('Weight').snapshots();
+    _getWeightData();
     super.initState();
   }
 
@@ -74,11 +87,6 @@ class _WeightPageState extends State<WeightPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
-                  const Spacer(flex: 1),
-                  Text(userName,
-                      style: const TextStyle(
-                          color: Colors.deepPurpleAccent, fontSize: 28)),
-                  const Spacer(flex: 1),
                   StreamBuilder(
                     stream: _stream,
                     builder: (BuildContext context,
@@ -91,17 +99,17 @@ class _WeightPageState extends State<WeightPage> {
                           return const Center(
                               child: CircularProgressIndicator());
                         default:
-                          return SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height / 3,
+                          return Expanded(
                             child: ListView(
                               children: List<Widget>.from(snapshot.data?.docs
                                       .map((DocumentSnapshot document) {
                                     return ListTile(
-                                      title:
-                                          Text(document.get('Date').toString(),style: const TextStyle(
+                                      title: Text(
+                                        document.get('Date').toString(),
+                                        style: const TextStyle(
                                             color: Colors.deepPurple,
-                                            fontSize: 18),),
+                                            fontSize: 18),
+                                      ),
                                       subtitle: Text(
                                         "${document.get('Weight')}lbs;   ${document.get('BodyFat')}%",
                                         style: const TextStyle(
@@ -124,6 +132,11 @@ class _WeightPageState extends State<WeightPage> {
                       }));
                     },
                     child: const Text('Add Weight Data'),
+                  ),
+                  Text(
+                    _weightData.keys.toString(),
+                    style:
+                        const TextStyle(color: Color(0xFFE2E2F0), fontSize: 18),
                   ),
                 ],
               ),
