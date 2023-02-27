@@ -128,10 +128,6 @@ class _WorkoutPageState extends State<WorkoutPage> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   const Spacer(flex: 1),
-                  Text(userName,
-                      style: const TextStyle(
-                          color: Colors.deepPurpleAccent, fontSize: 28)),
-                  const Spacer(flex: 1),
                   StreamBuilder(
                     stream: _stream,
                     builder: (BuildContext context,
