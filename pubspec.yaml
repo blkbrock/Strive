@@ -47,6 +47,8 @@ dependencies:
   lottie: ^2.2.0
   flutter_calendar_carousel: ^2.4.2
   intl: ^0.18.0
+  syncfusion_flutter_charts: ^20.4.51
+  numberpicker: ^2.1.1
 
 dev_dependencies:
   flutter_test:
