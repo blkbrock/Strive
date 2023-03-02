@@ -25,7 +25,10 @@ class WeightPage extends StatefulWidget {
 class _WeightPageState extends State<WeightPage> {
   final databaseWeightRef = FirebaseFirestore.instance.collection('Users');
   late Stream<QuerySnapshot> _stream;
-  Map<String, QueryDocumentSnapshot> _weightData = {};
+  final Map<String, Entry> _weightDataMap = {};
+  final List _weightDataList = [];
+  final List<Entry> _sevenDayEntryList = [];
+  List _sortedWeightData = [];
 
   void uploadEntry(String newDate, String newWeight, String newBodyFat) async {
     databaseWeightRef
@@ -38,7 +41,16 @@ class _WeightPageState extends State<WeightPage> {
     final QuerySnapshot weightData =
         await databaseWeightRef.doc(userName).collection('Weight').get();
     for (final QueryDocumentSnapshot weight in weightData.docs) {
-      _weightData[weight.get('Date')] = weight;
+      Entry entry = Entry(
+          weight.get('Date').toString(),
+          double.parse(weight.get('Weight').toString()),
+          double.parse(weight.get('BodyFat').toString()));
+      _weightDataMap[weight.get('Date').toString()] = entry;
+      _weightDataList.add(entry);
+    }
+    _sortedWeightData = _weightDataMap.keys.toList()..sort();
+    for (int i = 0; i < 7; i++) {
+      _sevenDayEntryList.add(_weightDataMap[_sortedWeightData[i]]!);
     }
     setState(() {});
   }
@@ -87,56 +99,30 @@ class _WeightPageState extends State<WeightPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
-                  StreamBuilder(
-                    stream: _stream,
-                    builder: (BuildContext context,
-                        AsyncSnapshot<QuerySnapshot> snapshot) {
-                      if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
-                      }
-                      switch (snapshot.connectionState) {
-                        case ConnectionState.waiting:
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        default:
-                          return Expanded(
-                            child: ListView(
-                              children: List<Widget>.from(snapshot.data?.docs
-                                      .map((DocumentSnapshot document) {
-                                    return ListTile(
-                                      title: Text(
-                                        document.get('Date').toString(),
-                                        style: const TextStyle(
-                                            color: Colors.deepPurple,
-                                            fontSize: 18),
-                                      ),
-                                      subtitle: Text(
-                                        "${document.get('Weight')}lbs;   ${document.get('BodyFat')}%",
-                                        style: const TextStyle(
-                                            color: Color(0xFFE2E2F0),
-                                            fontSize: 18),
-                                      ),
-                                    );
-                                  }) ??
-                                  []),
-                            ),
-                          );
-                      }
-                    },
+                  Flexible(
+                    flex: 8,
+                    child: SingleChildScrollView(
+                        child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height,
+                      child: _sevenDaySnapshot(),
+                    )),
                   ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                          MaterialPageRoute(builder: (BuildContext context) {
-                        return AddWeightPage(userName);
-                      }));
-                    },
-                    child: const Text('Add Weight Data'),
-                  ),
-                  Text(
-                    _weightData.keys.toString(),
-                    style:
-                        const TextStyle(color: Color(0xFFE2E2F0), fontSize: 18),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (BuildContext context) {
+                            return AddWeightPage(userName);
+                          }));
+                        },
+                        child: const Text('Add Weight Data',
+                            style:
+                                TextStyle(color: strive_purple, fontSize: 8)),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -202,4 +188,80 @@ class _WeightPageState extends State<WeightPage> {
       ),
     );
   }
+
+  Container _sevenDaySnapshot() {
+    if (_sortedWeightData.isEmpty) {
+      return Container();
+    } else {
+      return Container(
+        color: strive_navy,
+        child: Column(children: [
+          SfCartesianChart(
+            primaryXAxis: CategoryAxis(),
+            title: ChartTitle(text: 'Weight Over the Past 7 Days'),
+            legend: Legend(isVisible: true),
+            tooltipBehavior: TooltipBehavior(enable: true),
+            series: <ChartSeries>[
+              SplineSeries<Entry, String>(
+                dataSource: _sevenDayEntryList,
+                xValueMapper: (Entry entry, _) => entry.getDate,
+                yValueMapper: (Entry entry, _) => entry.getWeight,
+                name: 'Weight',
+                color: strive_purple,
+                width: 6.0,
+                trendlines: List<Trendline>.generate(
+                  1,
+                  (int index) => Trendline(
+                    name: 'Trend',
+                    type: TrendlineType.linear,
+                    color: strive_cyan,
+                    width: 3,
+                  ),
+                ),
+                dataLabelSettings: const DataLabelSettings(isVisible: true),
+              ),
+            ],
+          ),
+          SfCartesianChart(
+            primaryXAxis: CategoryAxis(),
+            title: ChartTitle(text: 'Body Fat Over the Past 7 Days'),
+            legend: Legend(isVisible: true),
+            tooltipBehavior: TooltipBehavior(enable: true),
+            series: <ChartSeries>[
+              SplineSeries<Entry, String>(
+                dataSource: _sevenDayEntryList,
+                xValueMapper: (Entry entry, _) => entry.getDate,
+                yValueMapper: (Entry entry, _) => entry.getBodyFat,
+                name: 'Body Fat',
+                color: strive_purple,
+                width: 6.0,
+                trendlines: List<Trendline>.generate(
+                  1,
+                  (int index) => Trendline(
+                    name: 'Trend',
+                    type: TrendlineType.linear,
+                    color: strive_cyan,
+                    width: 3,
+                  ),
+                ),
+                dataLabelSettings: const DataLabelSettings(isVisible: true),
+              ),
+            ],
+          ),
+        ]),
+      );
+    }
+  }
+}
+
+class Entry {
+  String date;
+  double weight;
+  double bodyFat;
+
+  String get getDate => date;
+  double get getWeight => weight;
+  double get getBodyFat => bodyFat;
+
+  Entry(this.date, this.weight, this.bodyFat);
 }
