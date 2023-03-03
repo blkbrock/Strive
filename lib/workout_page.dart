@@ -1,6 +1,10 @@
 import 'dart:core';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_calendar_carousel/classes/event.dart';
+import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart';
+import 'package:intl/intl.dart';
+import 'package:strive/add_workout_page.dart';
 import 'package:strive/community_page.dart';
 import 'package:strive/food_page.dart';
 import 'package:strive/messages_page.dart';
@@ -19,75 +23,60 @@ class WorkoutPage extends StatefulWidget {
 }
 
 class _WorkoutPageState extends State<WorkoutPage> {
-  final databaseRef = FirebaseFirestore.instance.collection('Users');
-  late Stream<QuerySnapshot> _stream;
+  final databaseWorkoutRef = FirebaseFirestore.instance.collection('Users');
+  final Map<String, WorkoutEntry> _workoutDataMap = {};
+  final List _workoutDataList = [];
+  final List<WorkoutEntry> _sevenDayEntryList = [];
+  List _sortedWorkoutData = [];
   String date = '', exercise = '', duration = '';
+  final DateTime _currentDate = (DateTime.now());
+  late DateTime _selectedDate;
+  late DateTime _targetDateTime;
+  late String _selectedDateString;
+  late String _targetDateString;
 
   void uploadEntry(
-      String newDate, String newExercise, String newDuration) async {
-    databaseRef.doc(userName).collection('Workouts').add(
-        {'Date': newDate, 'Exercise': newExercise, 'Duration': newDuration});
+      String newDate, String newWorkout, String newDuration) async {
+    databaseWorkoutRef.doc(userName).collection('Workouts').add(
+        {'Date': newDate, 'WorkoutType': newWorkout, 'Duration': newDuration});
   }
 
-  void _showAddDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Add Workout Data'),
-          content: Form(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                TextFormField(
-                  decoration: const InputDecoration(labelText: 'Date'),
-                  onChanged: (String? newDate) {
-                    date = newDate!;
-                  },
-                ),
-                TextFormField(
-                  decoration: const InputDecoration(labelText: 'Exercise'),
-                  onChanged: (String? newExercise) {
-                    exercise = newExercise!;
-                  },
-                ),
-                TextFormField(
-                  decoration: const InputDecoration(labelText: 'Duration'),
-                  onChanged: (String? newDuration) {
-                    duration = newDuration!;
-                  },
-                ),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            MaterialButton(
-              child: const Text('Cancel'),
-              onPressed: () {
-                Navigator.pop(context, 'Cancel');
-              },
-            ),
-            MaterialButton(
-              child: const Text('Submit'),
-              onPressed: () {
-                if (date != '' && exercise != '' && duration != '') {
-                  setState(() {
-                    uploadEntry(date, exercise, duration);
-                  });
-                  Navigator.pop(context, 'Cancel');
-                }
-              },
-            ),
-          ],
-        );
-      },
-    );
+  Future<void> _getWorkoutData() async {
+    final QuerySnapshot workoutData =
+        await databaseWorkoutRef.doc(userName).collection('Workouts').get();
+        while (workoutData.docs.isEmpty) {
+      await Future.delayed(const Duration(milliseconds: 200));
+        }
+    for (final QueryDocumentSnapshot workout in workoutData.docs) {
+      WorkoutEntry entry = WorkoutEntry(
+          workout.get('Date').toString(),
+          workout.get('WorkoutType').toString(),
+          workout.get('Duration').toString());
+      _workoutDataMap[workout.get('Date').toString()] = entry;
+      _workoutDataList.add(entry);
+    }
+    _sortedWorkoutData = _workoutDataMap.keys.toList()..sort();
+    for (int i = 0; i < 7; i++) {
+      _sevenDayEntryList.add(_workoutDataMap[_sortedWorkoutData[i]]!);
+    }
+    setState(() {});
+  }
+
+  @override
+  _WorkoutPageState() {
+    Future.delayed(const Duration(milliseconds: 200), () {
+      setState(() {});
+    });
   }
 
   @override
   void initState() {
+    _getWorkoutData();
+    _selectedDate = _currentDate;
+    _targetDateTime = _currentDate;
+    _targetDateString = DateFormat.yMMM().format(_currentDate);
+    _selectedDateString = DateFormat.MMMd().format(_currentDate);
     super.initState();
-    _stream = databaseRef.doc(userName).collection('Workouts').snapshots();
   }
 
   @override
@@ -127,45 +116,89 @@ class _WorkoutPageState extends State<WorkoutPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
-                  const Spacer(flex: 1),
-                  StreamBuilder(
-                    stream: _stream,
-                    builder: (BuildContext context,
-                        AsyncSnapshot<QuerySnapshot> snapshot) {
-                      if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
-                      }
-                      switch (snapshot.connectionState) {
-                        case ConnectionState.waiting:
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        default:
-                          return SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height / 3,
-                            child: ListView(
-                              children: List<Widget>.from(snapshot.data?.docs
-                                      .map((DocumentSnapshot document) {
-                                    return ListTile(
-                                      title:
-                                          Text(document.get('Date').toString()),
-                                      subtitle: Text(document
-                                              .get('Exercise')
-                                              .toString() +
-                                          document.get('Duration').toString()),
-                                    );
-                                  }) ??
-                                  []),
-                            ),
-                          );
-                      }
+                  CalendarCarousel<Event>(
+                    onDayPressed: (date, events) {
+                      _selectedDate = date;
+                      _selectedDateString =
+                          DateFormat.MMMd().format(_selectedDate);
+                      setState(() {});
                     },
+                    onCalendarChanged: (DateTime date) {
+                      setState(() {
+                        _targetDateTime = date;
+                        _targetDateString =
+                            DateFormat.yMMM().format(_targetDateTime);
+                      });
+                    },
+                    weekdayTextStyle: const TextStyle(
+                      color: strive_purple,
+                    ),
+                    weekendTextStyle: const TextStyle(
+                      color: strive_purple,
+                    ),
+                    thisMonthDayBorderColor: Colors.grey,
+                    headerText: _targetDateString,
+                    headerTextStyle: const TextStyle(color: strive_cyan),
+                    weekFormat: true,
+                    showOnlyCurrentMonthDate: false,
+                    height: 200.0,
+                    selectedDateTime: _selectedDate,
+                    targetDateTime: _targetDateTime,
+                    selectedDayBorderColor: strive_cyan,
+                    selectedDayButtonColor: strive_purple,
+                    showIconBehindDayText: true,
+                    daysHaveCircularBorder: true,
+                    customGridViewPhysics: const NeverScrollableScrollPhysics(),
+                    pageScrollPhysics: const ScrollPhysics(),
+                    pageSnapping: true,
+                    markedDateShowIcon: true,
+                    markedDateIconMaxShown: 2,
+                    selectedDayTextStyle:
+                        const TextStyle(color: strive_cyan, fontSize: 18.0),
+                    todayTextStyle: const TextStyle(
+                      color: strive_cyan,
+                    ),
+                    daysTextStyle: const TextStyle(
+                      color: strive_purple,
+                    ),
+                    markedDateIconBuilder: (event) {
+                      return event.icon ?? const Icon(Icons.help_outline);
+                    },
+                    minSelectedDate:
+                        _currentDate.subtract(const Duration(days: 360)),
+                    maxSelectedDate:
+                        _currentDate.add(const Duration(days: 360)),
+                    todayButtonColor: Colors.transparent,
+                    todayBorderColor: Colors.white10,
                   ),
-                  ElevatedButton(
-                    onPressed: () {
-                      _showAddDialog();
-                    },
-                    child: const Text('Add Workout Data'),
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Flexible(
+                          child: Column(
+                            children: [
+                              Text(
+                                _selectedDateString,
+                                style: const TextStyle(
+                                  color: strive_cyan,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 24.0,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Flexible(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              _workoutDataWidget(),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -231,4 +264,87 @@ class _WorkoutPageState extends State<WorkoutPage> {
       ),
     );
   }
+
+  Widget _workoutDataWidget() {
+    if (_workoutDataMap[DateFormat.yMMMd().format(_selectedDate).toString()]
+            ?.getWorkoutType ==
+        null) {
+      return _noDataWidget();
+    } else {
+      return _dataWidget();
+    }
+  }
+
+  Widget _dataWidget() {
+    return Flexible(
+      child: Column(
+        children: [
+          Text(
+              _workoutDataMap[
+                      DateFormat.yMMMd().format(_selectedDate).toString()]!
+                  .getWorkoutType
+                  .toString(),
+              style: const TextStyle(
+                  color: strive_cyan,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24.0)),
+          Text(
+              "${_workoutDataMap[DateFormat.yMMMd().format(_selectedDate).toString()]!.duration} minutes",
+              style: const TextStyle(
+                  color: strive_cyan,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24.0)),
+        ],
+      ),
+    );
+  }
+
+  Flexible _noDataWidget() {
+    return Flexible(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text(
+            'No Workout Data Found!',
+            style: TextStyle(
+              color: strive_cyan,
+              fontWeight: FontWeight.bold,
+              fontSize: 16.0,
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (BuildContext context) {
+                return AddWorkoutPage(userName, _selectedDate);
+              }));
+            },
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all<Color>(strive_purple),
+            ),
+            child: const Text(
+              'Add Workout Data?',
+              style: TextStyle(
+                color: strive_cyan,
+                fontWeight: FontWeight.bold,
+                fontSize: 16.0,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class WorkoutEntry {
+  String date;
+  String workoutType;
+  String duration;
+
+  String get getDate => date;
+  String get getDuration => duration;
+  String get getWorkoutType => workoutType;
+
+  WorkoutEntry(this.date, this.workoutType, this.duration);
 }
