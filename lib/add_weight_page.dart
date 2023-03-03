@@ -28,7 +28,7 @@ class _AddWeightPageState extends State<AddWeightPage> {
   late String _selectedDateString;
   late String _targetDateString;
 
-  String _date = '', _weight = '', _bodyFat = '';
+  String _date = '';
   int weightScroll = 0, bodyFatScroll = 0;
 
   final EventList<Event> _markedDateMap = EventList<Event>(
@@ -79,7 +79,7 @@ class _AddWeightPageState extends State<AddWeightPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: AppBar(title: const Text('Add Entry')),
+        appBar: AppBar(title: const Text('Add Weight Entry')),
         body: Container(
           decoration: const BoxDecoration(
             image: DecorationImage(
