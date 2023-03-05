@@ -47,7 +47,9 @@ class _WeightPageState extends State<WeightPage> {
       _weightDataList.add(entry);
     }
     _sortedWeightData = _weightDataMap.keys.toList()..sort();
-    for (int i = 0; i < 7; i++) {
+    int length = _sortedWeightData.length;
+    int lengthMinusSeven = length - 7;
+    for (int i = lengthMinusSeven; i < length; i++) {
       _sevenDayEntryList.add(_weightDataMap[_sortedWeightData[i]]!);
     }
     setState(() {});
@@ -102,24 +104,12 @@ class _WeightPageState extends State<WeightPage> {
                         child: Container(
                       width: MediaQuery.of(context).size.width,
                       height: MediaQuery.of(context).size.height,
-                      child: _sevenDaySnapshot(),
-                    )),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (BuildContext context) {
-                            return AddWeightPage(userName);
-                          }));
-                        },
-                        child: const Text('Add Weight Data',
-                            style:
-                                TextStyle(color: strive_purple, fontSize: 8)),
+                      child: Column(
+                        children: [
+                          _sevenDaySnapshot(),
+                        ],
                       ),
-                    ],
+                    )),
                   ),
                 ],
               ),
@@ -183,7 +173,22 @@ class _WeightPageState extends State<WeightPage> {
           ],
         ),
       ),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 60.0),
+        child: FloatingActionButton(
+          elevation: 5,
+          onPressed: () {
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (BuildContext context) {
+              return AddWeightPage(userName);
+            }));
+          },
+          backgroundColor: strive_purple,
+          child: const Icon(Icons.add),
+        ),
+      ),
     );
+    
   }
 
   Container _sevenDaySnapshot() {
@@ -193,13 +198,24 @@ class _WeightPageState extends State<WeightPage> {
       return Container(
         color: strive_navy,
         child: Column(children: [
+          const SizedBox(height: 20),
           SfCartesianChart(
-            primaryXAxis: CategoryAxis(),
-            title: ChartTitle(text: 'Weight Over the Past 7 Days'),
-            legend: Legend(isVisible: true),
+            palette: const <Color>[strive_purple, strive_cyan],
+            primaryXAxis: CategoryAxis(labelPlacement: LabelPlacement.onTicks, labelRotation: 30, labelStyle: const TextStyle(color: strive_lavender, fontSize: 10, fontFamily: 'Roboto')),
+            primaryYAxis: NumericAxis(labelStyle: const TextStyle(color: strive_lavender, fontSize: 10, fontFamily: 'Roboto')),
+            margin: const EdgeInsets.all(8.0),
+            title: ChartTitle(text: 'Weight Over the Past 7 Days', 
+            textStyle: const TextStyle(color: strive_purple, fontSize: 20, fontFamily: 'Roboto'),
+            ),
+            borderColor: strive_cyan,
+            borderWidth: 3,
+            plotAreaBorderColor: Colors.transparent,
+            legend: Legend(isVisible: false),
             tooltipBehavior: TooltipBehavior(enable: true),
             series: <ChartSeries>[
               SplineSeries<WeightEntry, String>(
+                animationDelay: 100,
+                animationDuration: 3000.0,
                 dataSource: _sevenDayEntryList,
                 xValueMapper: (WeightEntry entry, _) => entry.getDate,
                 yValueMapper: (WeightEntry entry, _) => entry.getWeight,
@@ -209,23 +225,35 @@ class _WeightPageState extends State<WeightPage> {
                 trendlines: List<Trendline>.generate(
                   1,
                   (int index) => Trendline(
+                    animationDelay: 2200,
+                animationDuration: 2000.0,
                     name: 'Trend',
                     type: TrendlineType.linear,
                     color: strive_cyan,
                     width: 3,
                   ),
                 ),
-                dataLabelSettings: const DataLabelSettings(isVisible: true),
+                dataLabelSettings: const DataLabelSettings(isVisible: true,  
+            textStyle: TextStyle(color: strive_cyan, fontSize: 14, fontFamily: 'Roboto', fontWeight: FontWeight.normal),),
               ),
             ],
           ),
+          const SizedBox(height: 20),
           SfCartesianChart(
-            primaryXAxis: CategoryAxis(),
-            title: ChartTitle(text: 'Body Fat Over the Past 7 Days'),
-            legend: Legend(isVisible: true),
+            primaryXAxis: CategoryAxis(labelPlacement: LabelPlacement.onTicks, labelRotation: 30, labelStyle: const TextStyle(color: strive_lavender, fontSize: 10, fontFamily: 'Roboto',)),
+            primaryYAxis: NumericAxis(labelStyle: const TextStyle(color: strive_lavender, fontSize: 10, fontFamily: 'Roboto')),
+            title: ChartTitle(text: 'Body Fat Over the Past 7 Days', 
+            textStyle: const TextStyle(color: strive_purple, fontSize: 20, fontFamily: 'Roboto'),
+            ),
+            borderColor: strive_cyan,
+            borderWidth: 3,
+            plotAreaBorderColor: Colors.transparent,
+            legend: Legend(isVisible: false),
             tooltipBehavior: TooltipBehavior(enable: true),
             series: <ChartSeries>[
               SplineSeries<WeightEntry, String>(
+                animationDelay: 100,
+                animationDuration: 3000.0,
                 dataSource: _sevenDayEntryList,
                 xValueMapper: (WeightEntry entry, _) => entry.getDate,
                 yValueMapper: (WeightEntry entry, _) => entry.getBodyFat,
@@ -235,13 +263,16 @@ class _WeightPageState extends State<WeightPage> {
                 trendlines: List<Trendline>.generate(
                   1,
                   (int index) => Trendline(
+                    animationDelay: 2200,
+                    animationDuration: 2000.0,
                     name: 'Trend',
                     type: TrendlineType.linear,
                     color: strive_cyan,
                     width: 3,
                   ),
                 ),
-                dataLabelSettings: const DataLabelSettings(isVisible: true),
+                dataLabelSettings: const DataLabelSettings(isVisible: true,  
+            textStyle: TextStyle(color: strive_cyan, fontSize: 14, fontFamily: 'Roboto', fontWeight: FontWeight.normal),),
               ),
             ],
           ),
