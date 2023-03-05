@@ -123,7 +123,8 @@ class _AddWeightPageState extends State<AddWeightPage> {
               daysHaveCircularBorder: true,
 
               /// null for not rendering any border, true for circular border, false for rectangular border
-              customGridViewPhysics: const AlwaysScrollableScrollPhysics(),
+              customGridViewPhysics: const NeverScrollableScrollPhysics(),
+              pageSnapping: true,
               markedDateShowIcon: true,
               markedDateIconMaxShown: 2,
               selectedDayTextStyle:
@@ -159,7 +160,7 @@ class _AddWeightPageState extends State<AddWeightPage> {
             Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               const Spacer(flex: 2),
               const Expanded(
-                flex: 4,
+                flex: 3,
                 child: Text('Weight',
                     style: TextStyle(color: strive_cyan, fontSize: 20.0)),
               ),
@@ -167,18 +168,24 @@ class _AddWeightPageState extends State<AddWeightPage> {
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.2,
                 child: NumberPicker(
+                  step: 1,
+                  haptics: true,
                   minValue: 0,
                   maxValue: 300,
                   value: weightScroll,
                   onChanged: ((value) => setState(() => weightScroll = value)),
                 ),
               ),
+              const Flexible(
+                  flex: 1,
+                  child: Text('lbs',
+                      style: TextStyle(fontSize: 20.0, color: strive_cyan))),
               const Spacer(flex: 1),
             ]),
             Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               const Spacer(flex: 2),
               const Expanded(
-                flex: 4,
+                flex: 3,
                 child: Text('BodyFat %',
                     style: TextStyle(color: strive_cyan, fontSize: 20.0)),
               ),
@@ -186,12 +193,17 @@ class _AddWeightPageState extends State<AddWeightPage> {
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.2,
                 child: NumberPicker(
+                  haptics: true,
                   minValue: 0,
                   maxValue: 300,
                   value: bodyFatScroll,
                   onChanged: ((value) => setState(() => bodyFatScroll = value)),
                 ),
               ),
+              const Flexible(
+                  flex: 1,
+                  child: Text('%',
+                      style: TextStyle(fontSize: 20.0, color: strive_cyan))),
               const Spacer(flex: 1),
             ]),
             const SizedBox(height: 20.0),
