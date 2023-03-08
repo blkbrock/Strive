@@ -44,9 +44,9 @@ class _WorkoutPageState extends State<WorkoutPage> {
   Future<void> _getWorkoutData() async {
     final QuerySnapshot workoutData =
         await databaseWorkoutRef.doc(userName).collection('Workouts').get();
-        while (workoutData.docs.isEmpty) {
+    while (workoutData.docs.isEmpty) {
       await Future.delayed(const Duration(milliseconds: 200));
-        }
+    }
     for (final QueryDocumentSnapshot workout in workoutData.docs) {
       WorkoutEntry entry = WorkoutEntry(
           workout.get('Date').toString(),
@@ -141,7 +141,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                     headerTextStyle: const TextStyle(color: strive_cyan),
                     weekFormat: true,
                     showOnlyCurrentMonthDate: false,
-                    height: 200.0,
+                    height: 180.0,
                     selectedDateTime: _selectedDate,
                     targetDateTime: _targetDateTime,
                     selectedDayBorderColor: strive_cyan,
@@ -175,7 +175,9 @@ class _WorkoutPageState extends State<WorkoutPage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
+                        const Spacer(flex: 1),
                         Flexible(
+                          flex: 1,
                           child: Column(
                             children: [
                               Text(
@@ -189,11 +191,24 @@ class _WorkoutPageState extends State<WorkoutPage> {
                             ],
                           ),
                         ),
+                        const Spacer(flex: 1),
                         Flexible(
+                          flex: 3,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               _workoutDataWidget(),
+                            ],
+                          ),
+                        ),
+                        const Spacer(flex: 1),
+                        Flexible(
+                          flex: 6,
+                          fit: FlexFit.tight,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              _workoutStreakWidget(),
                             ],
                           ),
                         ),
@@ -276,8 +291,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
   }
 
   Widget _dataWidget() {
-    return Flexible(
-      child: Column(
+    return Column(
         children: [
           Text(
               _workoutDataMap[
@@ -295,7 +309,6 @@ class _WorkoutPageState extends State<WorkoutPage> {
                   fontWeight: FontWeight.bold,
                   fontSize: 24.0)),
         ],
-      ),
     );
   }
 
@@ -334,6 +347,10 @@ class _WorkoutPageState extends State<WorkoutPage> {
         ],
       ),
     );
+  }
+  
+  _workoutStreakWidget() {
+    return const ColoredBox(color: strive_purple, child: Text("Workout Streak Widget", style: TextStyle(color: strive_cyan),));
   }
 }
 
