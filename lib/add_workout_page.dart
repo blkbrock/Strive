@@ -116,7 +116,8 @@ class _AddWorkoutPageState extends State<AddWorkoutPage> {
               daysHaveCircularBorder: true,
 
               /// null for not rendering any border, true for circular border, false for rectangular border
-              customGridViewPhysics: const AlwaysScrollableScrollPhysics(),
+              customGridViewPhysics: const NeverScrollableScrollPhysics(),
+              pageSnapping: true,
               markedDateShowIcon: true,
               markedDateIconMaxShown: 2,
               selectedDayTextStyle:
