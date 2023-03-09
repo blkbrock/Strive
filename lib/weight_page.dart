@@ -92,6 +92,24 @@ class _WeightPageState extends State<WeightPage> {
         ),
         child: Column(
           children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (BuildContext context) {
+                        return WeightPage(userName);
+                      }));
+                    },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: strive_lavender, backgroundColor: strive_navy,
+                      shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                    ),
+                    child: const Text("Refresh", style: TextStyle(fontSize: 12, color: strive_lavender))),
+              ],
+            ),
             Flexible(
               flex: 11,
               fit: FlexFit.tight,
@@ -188,7 +206,6 @@ class _WeightPageState extends State<WeightPage> {
         ),
       ),
     );
-    
   }
 
   Container _sevenDaySnapshot() {
@@ -201,11 +218,23 @@ class _WeightPageState extends State<WeightPage> {
           const SizedBox(height: 20),
           SfCartesianChart(
             palette: const <Color>[strive_purple, strive_cyan],
-            primaryXAxis: CategoryAxis(labelPlacement: LabelPlacement.onTicks, labelRotation: 30, labelStyle: const TextStyle(color: strive_lavender, fontSize: 10, fontFamily: 'Roboto')),
-            primaryYAxis: NumericAxis(labelStyle: const TextStyle(color: strive_lavender, fontSize: 10, fontFamily: 'Roboto')),
+            primaryXAxis: CategoryAxis(
+                labelPlacement: LabelPlacement.onTicks,
+                labelRotation: 30,
+                labelStyle: const TextStyle(
+                    color: strive_lavender,
+                    fontSize: 10,
+                    fontFamily: 'Roboto')),
+            primaryYAxis: NumericAxis(
+                labelStyle: const TextStyle(
+                    color: strive_lavender,
+                    fontSize: 10,
+                    fontFamily: 'Roboto')),
             margin: const EdgeInsets.all(8.0),
-            title: ChartTitle(text: 'Weight Over the Past 7 Days', 
-            textStyle: const TextStyle(color: strive_purple, fontSize: 20, fontFamily: 'Roboto'),
+            title: ChartTitle(
+              text: 'Weight Over the Past 7 Days',
+              textStyle: const TextStyle(
+                  color: strive_purple, fontSize: 20, fontFamily: 'Roboto'),
             ),
             borderColor: strive_cyan,
             borderWidth: 3,
@@ -226,24 +255,43 @@ class _WeightPageState extends State<WeightPage> {
                   1,
                   (int index) => Trendline(
                     animationDelay: 2200,
-                animationDuration: 2000.0,
+                    animationDuration: 2000.0,
                     name: 'Trend',
                     type: TrendlineType.linear,
                     color: strive_cyan,
                     width: 3,
                   ),
                 ),
-                dataLabelSettings: const DataLabelSettings(isVisible: true,  
-            textStyle: TextStyle(color: strive_cyan, fontSize: 14, fontFamily: 'Roboto', fontWeight: FontWeight.normal),),
+                dataLabelSettings: const DataLabelSettings(
+                  isVisible: true,
+                  textStyle: TextStyle(
+                      color: strive_cyan,
+                      fontSize: 14,
+                      fontFamily: 'Roboto',
+                      fontWeight: FontWeight.normal),
+                ),
               ),
             ],
           ),
           const SizedBox(height: 20),
           SfCartesianChart(
-            primaryXAxis: CategoryAxis(labelPlacement: LabelPlacement.onTicks, labelRotation: 30, labelStyle: const TextStyle(color: strive_lavender, fontSize: 10, fontFamily: 'Roboto',)),
-            primaryYAxis: NumericAxis(labelStyle: const TextStyle(color: strive_lavender, fontSize: 10, fontFamily: 'Roboto')),
-            title: ChartTitle(text: 'Body Fat Over the Past 7 Days', 
-            textStyle: const TextStyle(color: strive_purple, fontSize: 20, fontFamily: 'Roboto'),
+            primaryXAxis: CategoryAxis(
+                labelPlacement: LabelPlacement.onTicks,
+                labelRotation: 30,
+                labelStyle: const TextStyle(
+                  color: strive_lavender,
+                  fontSize: 10,
+                  fontFamily: 'Roboto',
+                )),
+            primaryYAxis: NumericAxis(
+                labelStyle: const TextStyle(
+                    color: strive_lavender,
+                    fontSize: 10,
+                    fontFamily: 'Roboto')),
+            title: ChartTitle(
+              text: 'Body Fat Over the Past 7 Days',
+              textStyle: const TextStyle(
+                  color: strive_purple, fontSize: 20, fontFamily: 'Roboto'),
             ),
             borderColor: strive_cyan,
             borderWidth: 3,
@@ -271,8 +319,14 @@ class _WeightPageState extends State<WeightPage> {
                     width: 3,
                   ),
                 ),
-                dataLabelSettings: const DataLabelSettings(isVisible: true,  
-            textStyle: TextStyle(color: strive_cyan, fontSize: 14, fontFamily: 'Roboto', fontWeight: FontWeight.normal),),
+                dataLabelSettings: const DataLabelSettings(
+                  isVisible: true,
+                  textStyle: TextStyle(
+                      color: strive_cyan,
+                      fontSize: 14,
+                      fontFamily: 'Roboto',
+                      fontWeight: FontWeight.normal),
+                ),
               ),
             ],
           ),
