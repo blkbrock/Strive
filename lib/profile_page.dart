@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:strive/auth.dart';
 import 'package:strive/community_page.dart';
 import 'package:strive/strive_styles.dart';
 import 'package:strive/weight_page.dart';
@@ -24,7 +25,6 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePage extends State<ProfilePage> {
-  void showHistory() {}
   String user = '', msg = '', sendID = '', sendMsg = '';
   num numMsgs = 0;
 
@@ -79,7 +79,25 @@ class _ProfilePage extends State<ProfilePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  const Spacer(flex: 1),
+                  Flexible(
+                    flex: 1,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        ElevatedButton(
+                            style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all<Color>(strive_cyan),
+                            ),
+                            child: const Text('signout', style: TextStyle(color: strive_lavender, fontSize: 8),),
+                            onPressed: () async {
+                              await AuthService().signOut();
+                              Navigator.of(context).pushNamedAndRemoveUntil(
+                                  '/', (route) => false);
+                            }),
+                      ],
+                    ),
+                  ),
                   Expanded(
                     flex: 6,
                     child: Column(
