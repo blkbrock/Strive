@@ -23,12 +23,6 @@ class LoginPage extends StatelessWidget {
             SizedBox(height: MediaQuery.of(context).size.height * 0.3, 
             child: Image.asset('assets/strive_logo.png')),
             LoginButton(
-              text: 'Sign in with Email',
-              icon: FontAwesomeIcons.envelope,
-              color: Colors.blue,
-              loginMethod: AuthService().emailLogin,
-            ),
-            LoginButton(
               text: 'Sign in with Google',
               icon: FontAwesomeIcons.google,
               color: Colors.blue,
