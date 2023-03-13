@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "574814677548",
+    "firebase_url": "https://strive-bd04f-default-rtdb.firebaseio.com",
     "project_id": "strive-bd04f",
     "storage_bucket": "strive-bd04f.appspot.com"
   },
@@ -14,7 +15,23 @@
       },
       "oauth_client": [
         {
-          "client_id": "574814677548-2dr2dj55gf4l2ms1g86c7l2tdt1bsels.apps.googleusercontent.com",
+          "client_id": "574814677548-qasqhjkevnpdnbjocj1aia883nblfbfd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "krusemark.brock.strive",
+            "certificate_hash": "de306743d745fdc18e6f5e4ce0016fd1fe5adc5f"
+          }
+        },
+        {
+          "client_id": "574814677548-ug6lguuhj4v031d9s24gb2ikjgulk97p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "krusemark.brock.strive",
+            "certificate_hash": "cc480eaed81ce85417232ec9ef92244cf4eb710c"
+          }
+        },
+        {
+          "client_id": "574814677548-f1b2lvj9midtgmds4t9bsrh14gjqs1pe.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
