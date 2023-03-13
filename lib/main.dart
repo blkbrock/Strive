@@ -73,8 +73,15 @@ class _HomePageState extends State<HomePage> {
             child: Text('Error!'),
           );
         } else if (snapshot.hasData) {
-          String? displayName() { if (snapshot.hasData) { return snapshot.data!.displayName; } else { return ''; } }
-          return ProfilePage(displayName().toString());
+          String? userID() {
+            if (snapshot.hasData) {
+              return snapshot.data!.uid;
+            } else {
+              return '';
+            }
+          }
+
+          return ProfilePage(userID().toString());
         } else {
           return const LoginPage();
         }
