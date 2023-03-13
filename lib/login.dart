@@ -20,8 +20,9 @@ class LoginPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            SizedBox(height: MediaQuery.of(context).size.height * 0.3, 
-            child: Image.asset('assets/strive_logo.png')),
+            SizedBox(
+                height: MediaQuery.of(context).size.height * 0.3,
+                child: Image.asset('assets/strive_logo.png')),
             LoginButton(
               text: 'Sign in with Google',
               icon: FontAwesomeIcons.google,
@@ -42,6 +43,24 @@ class LoginPage extends StatelessWidget {
                 }
               },
             ),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => ProfilePage('Bork'),
+                    ),
+                  );
+                },
+                child: const Text('LEGACY: Bork')),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => ProfilePage('BorkTest'),
+                    ),
+                  );
+                },
+                child: const Text('LEGACY: BorkTest')),
           ],
         ),
       ),
