@@ -211,7 +211,7 @@ class _AddWeightPageState extends State<AddWeightPage> {
               child: const Text('Submit',
                   style: TextStyle(color: strive_purple, fontSize: 16.0)),
               onPressed: () {
-                _date = DateFormat.yMMMd().format(_selectedDate);
+                _date = DateFormat('yyyy-MM-dd').format(_selectedDate);
                 setState(() {
                   uploadEntry(
                       _date, weightScroll.toString(), bodyFatScroll.toString());
