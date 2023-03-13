@@ -23,7 +23,7 @@ class WeightPage extends StatefulWidget {
 
 class _WeightPageState extends State<WeightPage> {
   final databaseWeightRef = FirebaseFirestore.instance.collection('Users');
-  final Map<String, WeightEntry> _weightDataMap = {};
+  final Map<DateTime, WeightEntry> _weightDataMap = {};
   final List _weightDataList = [];
   final List<WeightEntry> _sevenDayEntryList = [];
   List _sortedWeightData = [];
@@ -43,10 +43,13 @@ class _WeightPageState extends State<WeightPage> {
           weight.get('Date').toString(),
           double.parse(weight.get('Weight').toString()),
           double.parse(weight.get('BodyFat').toString()));
-      _weightDataMap[weight.get('Date').toString()] = entry;
+      _weightDataMap[DateTime.parse(weight.get('Date'))] = entry;
       _weightDataList.add(entry);
     }
-    _sortedWeightData = _weightDataMap.keys.toList()..sort();
+    _sortedWeightData = _weightDataMap.keys.toList()
+      ..sort(
+        (a, b) => a.compareTo(b),
+      );
     int length = _sortedWeightData.length;
     int lengthMinusSeven = length - 7;
     for (int i = lengthMinusSeven; i < length; i++) {
@@ -103,11 +106,14 @@ class _WeightPageState extends State<WeightPage> {
                       }));
                     },
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: strive_lavender, backgroundColor: strive_navy,
+                      foregroundColor: strive_lavender,
+                      backgroundColor: strive_navy,
                       shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10))),
                     ),
-                    child: const Text("Refresh", style: TextStyle(fontSize: 12, color: strive_lavender))),
+                    child: const Text("Refresh",
+                        style:
+                            TextStyle(fontSize: 12, color: strive_lavender))),
               ],
             ),
             Flexible(
