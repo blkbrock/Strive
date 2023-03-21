@@ -89,7 +89,11 @@ class _ProfilePage extends State<ProfilePage> {
                               backgroundColor:
                                   MaterialStateProperty.all<Color>(strive_cyan),
                             ),
-                            child: const Text('signout', style: TextStyle(color: strive_lavender, fontSize: 8),),
+                            child: const Text(
+                              'signout',
+                              style: TextStyle(
+                                  color: strive_lavender, fontSize: 8),
+                            ),
                             onPressed: () async {
                               await AuthService().signOut();
                               Navigator.of(context).pushNamedAndRemoveUntil(
